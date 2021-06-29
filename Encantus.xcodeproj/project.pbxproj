@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */; };
 		41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD6268B6829003C4966 /* AppDelegate.swift */; };
 		41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD8268B6829003C4966 /* SceneDelegate.swift */; };
 		41CBDDDB268B6829003C4966 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDA268B6829003C4966 /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.release.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.release.xcconfig"; sourceTree = "<group>"; };
 		41CBDDD3268B6829003C4966 /* Encantus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Encantus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41CBDDD6268B6829003C4966 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41CBDDD8268B6829003C4966 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +28,8 @@
 		41CBDDE2268B6829003C4966 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41CBDDE5268B6829003C4966 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41CBDDE7268B6829003C4966 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Encantus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A9B3584E9CF2A3AED2D72CF4 /* Pods-Encantus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.debug.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +37,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08E70DD33ACE50ADC616022A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A9B3584E9CF2A3AED2D72CF4 /* Pods-Encantus.debug.xcconfig */,
+				28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		0AFD42B0C257C378C037DC0B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		41CBDDCA268B6829003C4966 = {
 			isa = PBXGroup;
 			children = (
 				41CBDDD5268B6829003C4966 /* Encantus */,
 				41CBDDD4268B6829003C4966 /* Products */,
+				08E70DD33ACE50ADC616022A /* Pods */,
+				0AFD42B0C257C378C037DC0B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -77,9 +102,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 41CBDDEA268B6829003C4966 /* Build configuration list for PBXNativeTarget "Encantus" */;
 			buildPhases = (
+				F82658927A58A386514DDB25 /* [CP] Check Pods Manifest.lock */,
 				41CBDDCF268B6829003C4966 /* Sources */,
 				41CBDDD0268B6829003C4966 /* Frameworks */,
 				41CBDDD1268B6829003C4966 /* Resources */,
+				86B6E60FD6933F0466E07681 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -106,7 +133,7 @@
 				};
 			};
 			buildConfigurationList = 41CBDDCE268B6829003C4966 /* Build configuration list for PBXProject "Encantus" */;
-			compatibilityVersion = "Xcode 13.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -135,6 +162,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		86B6E60FD6933F0466E07681 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Encantus/Pods-Encantus-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Encantus/Pods-Encantus-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Encantus/Pods-Encantus-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F82658927A58A386514DDB25 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Encantus-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		41CBDDCF268B6829003C4966 /* Sources */ = {
@@ -288,6 +357,7 @@
 		};
 		41CBDDEB268B6829003C4966 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A9B3584E9CF2A3AED2D72CF4 /* Pods-Encantus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -316,6 +386,7 @@
 		};
 		41CBDDEC268B6829003C4966 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
