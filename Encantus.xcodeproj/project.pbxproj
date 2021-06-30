@@ -8,9 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */; };
+		4135D863268B6D2800A36CF5 /* UIView+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4135D862268B6D2800A36CF5 /* UIView+extensions.swift */; };
+		4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC77268B7B7D00D83BA6 /* Song.swift */; };
+		4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC7C268B7C3D00D83BA6 /* DataService.swift */; };
+		4156DC7F268B877B00D83BA6 /* SidhuSon.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4156DC7E268B877B00D83BA6 /* SidhuSon.mp3 */; };
+		4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC80268B881C00D83BA6 /* PlayerVC.swift */; };
+		4156DC83268B9CC000D83BA6 /* Regret.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4156DC82268B9CC000D83BA6 /* Regret.mp3 */; };
+		4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC84268B9D8E00D83BA6 /* GradientButton.swift */; };
 		41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD6268B6829003C4966 /* AppDelegate.swift */; };
 		41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD8268B6829003C4966 /* SceneDelegate.swift */; };
-		41CBDDDB268B6829003C4966 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDA268B6829003C4966 /* ViewController.swift */; };
+		41CBDDDB268B6829003C4966 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDA268B6829003C4966 /* HomeVC.swift */; };
 		41CBDDDE268B6829003C4966 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41CBDDDC268B6829003C4966 /* Main.storyboard */; };
 		41CBDDE1268B6829003C4966 /* Encantus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDF268B6829003C4966 /* Encantus.xcdatamodeld */; };
 		41CBDDE3268B6829003C4966 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41CBDDE2268B6829003C4966 /* Assets.xcassets */; };
@@ -19,10 +26,17 @@
 
 /* Begin PBXFileReference section */
 		28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.release.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.release.xcconfig"; sourceTree = "<group>"; };
+		4135D862268B6D2800A36CF5 /* UIView+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+extensions.swift"; sourceTree = "<group>"; };
+		4156DC77268B7B7D00D83BA6 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		4156DC7C268B7C3D00D83BA6 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
+		4156DC7E268B877B00D83BA6 /* SidhuSon.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = SidhuSon.mp3; sourceTree = "<group>"; };
+		4156DC80268B881C00D83BA6 /* PlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerVC.swift; sourceTree = "<group>"; };
+		4156DC82268B9CC000D83BA6 /* Regret.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Regret.mp3; sourceTree = "<group>"; };
+		4156DC84268B9D8E00D83BA6 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
 		41CBDDD3268B6829003C4966 /* Encantus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Encantus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41CBDDD6268B6829003C4966 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41CBDDD8268B6829003C4966 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		41CBDDDA268B6829003C4966 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		41CBDDDA268B6829003C4966 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		41CBDDDD268B6829003C4966 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		41CBDDE0268B6829003C4966 /* Encantus.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Encantus.xcdatamodel; sourceTree = "<group>"; };
 		41CBDDE2268B6829003C4966 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -50,7 +64,6 @@
 				A9B3584E9CF2A3AED2D72CF4 /* Pods-Encantus.debug.xcconfig */,
 				28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -60,6 +73,57 @@
 				979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4135D85F268B6B9200A36CF5 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4156DC7E268B877B00D83BA6 /* SidhuSon.mp3 */,
+				4156DC82268B9CC000D83BA6 /* Regret.mp3 */,
+				41CBDDD6268B6829003C4966 /* AppDelegate.swift */,
+				41CBDDD8268B6829003C4966 /* SceneDelegate.swift */,
+				4135D862268B6D2800A36CF5 /* UIView+extensions.swift */,
+				4156DC84268B9D8E00D83BA6 /* GradientButton.swift */,
+				4156DC7C268B7C3D00D83BA6 /* DataService.swift */,
+				41CBDDE7268B6829003C4966 /* Info.plist */,
+				41CBDDE2268B6829003C4966 /* Assets.xcassets */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4135D860268B6BAD00A36CF5 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				41CBDDDC268B6829003C4966 /* Main.storyboard */,
+				41CBDDE4268B6829003C4966 /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		4135D861268B6BBA00A36CF5 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				4156DC7A268B7B8E00D83BA6 /* Home */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		4156DC79268B7B8700D83BA6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				4156DC77268B7B7D00D83BA6 /* Song.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		4156DC7A268B7B8E00D83BA6 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				4156DC79268B7B8700D83BA6 /* Services */,
+				41CBDDDA268B6829003C4966 /* HomeVC.swift */,
+				4156DC80268B881C00D83BA6 /* PlayerVC.swift */,
+			);
+			name = Home;
 			sourceTree = "<group>";
 		};
 		41CBDDCA268B6829003C4966 = {
@@ -83,13 +147,9 @@
 		41CBDDD5268B6829003C4966 /* Encantus */ = {
 			isa = PBXGroup;
 			children = (
-				41CBDDD6268B6829003C4966 /* AppDelegate.swift */,
-				41CBDDD8268B6829003C4966 /* SceneDelegate.swift */,
-				41CBDDDA268B6829003C4966 /* ViewController.swift */,
-				41CBDDDC268B6829003C4966 /* Main.storyboard */,
-				41CBDDE2268B6829003C4966 /* Assets.xcassets */,
-				41CBDDE4268B6829003C4966 /* LaunchScreen.storyboard */,
-				41CBDDE7268B6829003C4966 /* Info.plist */,
+				4135D85F268B6B9200A36CF5 /* Services */,
+				4135D861268B6BBA00A36CF5 /* View Controllers */,
+				4135D860268B6BAD00A36CF5 /* Storyboards */,
 				41CBDDDF268B6829003C4966 /* Encantus.xcdatamodeld */,
 			);
 			path = Encantus;
@@ -155,8 +215,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4156DC7F268B877B00D83BA6 /* SidhuSon.mp3 in Resources */,
 				41CBDDE6268B6829003C4966 /* LaunchScreen.storyboard in Resources */,
 				41CBDDE3268B6829003C4966 /* Assets.xcassets in Resources */,
+				4156DC83268B9CC000D83BA6 /* Regret.mp3 in Resources */,
 				41CBDDDE268B6829003C4966 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,9 +272,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41CBDDDB268B6829003C4966 /* ViewController.swift in Sources */,
+				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
+				4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */,
+				41CBDDDB268B6829003C4966 /* HomeVC.swift in Sources */,
+				4135D863268B6D2800A36CF5 /* UIView+extensions.swift in Sources */,
+				4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */,
 				41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */,
 				41CBDDE1268B6829003C4966 /* Encantus.xcdatamodeld in Sources */,
+				4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */,
 				41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -365,7 +432,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JL7UZ93S3L;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Encantus/Info.plist;
+				INFOPLIST_FILE = Encantus/Services/Info.plist;
+				INFOPLIST_KEY_CFBundleExecutable = Encantus;
+				INFOPLIST_KEY_CFBundleName = Encantus;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -380,7 +450,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -394,7 +464,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = JL7UZ93S3L;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Encantus/Info.plist;
+				INFOPLIST_FILE = Encantus/Services/Info.plist;
+				INFOPLIST_KEY_CFBundleExecutable = Encantus;
+				INFOPLIST_KEY_CFBundleName = Encantus;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -409,7 +482,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
