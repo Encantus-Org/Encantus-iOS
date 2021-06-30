@@ -22,6 +22,7 @@
 		41CBDDE1268B6829003C4966 /* Encantus.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDF268B6829003C4966 /* Encantus.xcdatamodeld */; };
 		41CBDDE3268B6829003C4966 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41CBDDE2268B6829003C4966 /* Assets.xcassets */; };
 		41CBDDE6268B6829003C4966 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 41CBDDE4268B6829003C4966 /* LaunchScreen.storyboard */; };
+		41CF29E4268CD33400B3E71A /* CheatSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CF29E3268CD33400B3E71A /* CheatSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		41CBDDE2268B6829003C4966 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		41CBDDE5268B6829003C4966 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		41CBDDE7268B6829003C4966 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		41CF29E3268CD33400B3E71A /* CheatSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheatSheet.swift; sourceTree = "<group>"; };
 		979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Encantus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9B3584E9CF2A3AED2D72CF4 /* Pods-Encantus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.debug.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,6 +85,7 @@
 				41CBDDD6268B6829003C4966 /* AppDelegate.swift */,
 				41CBDDD8268B6829003C4966 /* SceneDelegate.swift */,
 				4135D862268B6D2800A36CF5 /* UIView+extensions.swift */,
+				41CF29E3268CD33400B3E71A /* CheatSheet.swift */,
 				4156DC84268B9D8E00D83BA6 /* GradientButton.swift */,
 				4156DC7C268B7C3D00D83BA6 /* DataService.swift */,
 				41CBDDE7268B6829003C4966 /* Info.plist */,
@@ -273,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
+				41CF29E4268CD33400B3E71A /* CheatSheet.swift in Sources */,
 				4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */,
 				41CBDDDB268B6829003C4966 /* HomeVC.swift in Sources */,
 				4135D863268B6D2800A36CF5 /* UIView+extensions.swift in Sources */,

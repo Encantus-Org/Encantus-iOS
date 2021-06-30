@@ -6,5 +6,5 @@ target 'Encantus' do
 
   # Pods for Encantus
     pod 'Hero'
-
+    pod 'Gemini'
 end

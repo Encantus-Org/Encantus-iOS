@@ -21,8 +21,8 @@ class DataService {
     func getSongs() -> Future<[Song],Error> {
         return Future { promixe in
             var songsarr = [Song]()
-            songsarr.append(Song(name: "SidhuSon", album: "Moosetape", artist: "SidhuMoosewala", artist2: "NaN", cover: UIImage(named: "sample-cover")))
-            songsarr.append(Song(name: "Regret", album: "Moosetape", artist: "SidhuMoosewala", artist2: "NaN", cover: UIImage(named: "regret-cover")))
+            songsarr.append(Song(name: "SidhuSon", album: "Moosetape", artist: "Sidhu Moosewala", artist2: "NaN", cover: UIImage(named: "sample-cover")))
+            songsarr.append(Song(name: "Regret", album: "Moosetape", artist: "Sidhu Moosewala", artist2: "NaN", cover: UIImage(named: "regret-cover")))
             promixe(.success(songsarr))
         }
     }

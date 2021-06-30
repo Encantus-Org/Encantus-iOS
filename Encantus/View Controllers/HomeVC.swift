@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import Gemini
 import Combine
 
 class CategoryCell: UICollectionViewCell {
     @IBOutlet weak var textLabel: UILabel!
 }
-class SongsCell: UICollectionViewCell {
+class SongsCell: GeminiCell {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var songNameLabel: UILabel!
@@ -31,18 +32,28 @@ class HomeVC: UITableViewController {
             categoriesCollectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
-    @IBOutlet weak var songCollectionView: UICollectionView!
+    @IBOutlet weak var songCollectionView: GeminiCollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         fetchData()
+        
         // set the theme to always dark
         UIApplication.shared.windows.forEach { window in
             window.overrideUserInterfaceStyle = .dark
         }
+        
         /// load` background image `view
 //        self.view.addBackground(imageName: "bg-image")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Configure cards animation
+        songCollectionView.gemini
+            .scaleAnimation()
+            .scale(0.65)
+            .scaleEffect(.scaleUp) // or .scaleDown
     }
     
     // config. table view
@@ -146,21 +157,32 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         }
     }
     
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        self.songCollectionView.animateVisibleCells()
+        _ = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if let cell = cell as? SongsCell {
+            self.songCollectionView.animateCell(cell)
+        }
+    }
+    
     @objc func playBttnDidTap(sender: UIButton) {
         let buttonTag = sender.tag
+        
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
         vc.modalPresentationStyle = .popover
+        
         if let sheet = vc.popoverPresentationController?.adaptiveSheetPresentationController {
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = true
         }
-        let song = songs[buttonTag]
         
         vc.songs = songs
         vc.position = buttonTag
         
-//        vc.song = song
         self.present(vc, animated: true)
     }
     

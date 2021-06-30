@@ -1,16 +1,20 @@
 PODS:
+  - Gemini (1.4.0)
   - Hero (1.5.0)
 
 DEPENDENCIES:
+  - Gemini
   - Hero
 
 SPEC REPOS:
   trunk:
+    - Gemini
     - Hero
 
 SPEC CHECKSUMS:
+  Gemini: 4ad915cca8805577fe3021e02feeca2b77dcdbfc
   Hero: b7385b75e7259da62f4f85462f59a5082d66b058
 
-PODFILE CHECKSUM: 2576f3ca605dc39acceb2b65626f44c6c767b5ee
+PODFILE CHECKSUM: ae5e0f6bd3feee2f8bfc520ce99f46954f1b0278
 
 COCOAPODS: 1.10.1
