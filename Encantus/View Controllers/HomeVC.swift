@@ -56,7 +56,8 @@ class HomeVC: UITableViewController {
         
         // design
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/12
-        currentSongCoverImageView.layer.masksToBounds = false
+        currentSongCoverImageView.layer.masksToBounds = true
+        currentSongCoverImageView.clipsToBounds = true
         currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
         miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taped(_:)))
@@ -80,7 +81,7 @@ class HomeVC: UITableViewController {
                 sheet.prefersScrollingExpandsWhenScrolledToEdge = true
                 sheet.preferredCornerRadius = 30
             }
-            vc.willPlayNew = false
+            vc.isComingFromMiniPlayer = true
             self.present(vc, animated: true)
         } else {
             print("error")
@@ -192,7 +193,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             // update UI
             cell.songNameLabel.text = name
             cell.artistNameLabel.text = artist
-            cell.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+            cell.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
             
             // design
             cell.blurView.layer.masksToBounds = true
@@ -244,7 +245,6 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             
             vc.songs = sortedSongs
             vc.position = buttonTag
-            vc.willPlayNew = true
             
             self.present(vc, animated: true)
             
@@ -268,7 +268,6 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         
         vc.songs = sortedSongs
         vc.position = buttonTag
-        vc.willPlayNew = true
         
         self.present(vc, animated: true)
         
@@ -282,7 +281,7 @@ extension HomeVC {
     func configureMiniPlayer(songs: [Song], position: Int) {
         let song = songs[position]
         currentSongNameLabel.text = song.name
-        currentSongCoverImageView.kf.setImage(with: URL(string: song.coverUrlString), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        currentSongCoverImageView.kf.setImage(with: URL(string: song.coverUrlString), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         currentSongArtistNameLabel.text = song.artist[0]
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
         backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)

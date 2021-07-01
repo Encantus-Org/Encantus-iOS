@@ -5,7 +5,7 @@
 //  Created by Ankit Yadav on 29/06/21.
 //
 
-// TO DO -
+// TO DO - (error) -> When user come from miniplayer song start from 00:00
 
 import UIKit
 import Combine
@@ -23,7 +23,7 @@ class PlayerVC: UITableViewController {
     var songs = [Song]()
     var position: Int = 0
     var timer: Timer!
-    var willPlayNew: Bool!
+    var isComingFromMiniPlayer: Bool = false
     
 //    var observers: [AnyCancellable] = []
 //    let start = Date() // to be used when we're using combine timer
@@ -123,16 +123,67 @@ class PlayerVC: UITableViewController {
 }
 
 extension PlayerVC {
+//    func con() {
+//        var songg: Song?
+//        // check if user is coming from mini player of by tapping the main cell
+//        if isComingFromMiniPlayer {
+//            songg = currentPlaying
+//        } else {
+//            songg = songs[position]
+//        }
+//
+//        // check if currentPlaying song is empty or not!
+//        if SongService.shared.checkIfAleradyPlaying() == .isPausedd {
+//            // play new fresh song when nothing is playing in player
+//            currentPlaying = songg
+//            configure(song: songg!)
+//            print("Playing fresh song")
+//        } else {
+//            // some song is playing
+//            if currentPlaying == songg {
+//                // here i have to write the code to make a player which plays from same position as player
+//                print("Playing same song")
+//            }else {
+//                // plays different song when a song is plating
+//                print("Playing new song")
+//            }
+//            currentPlaying = nil
+//            player.pause()
+//            player = nil
+//            print("Player removed ✅")
+//            currentPlaying = songg
+//        }
+//
+//    }
     func configure() {
         var songg: Song?
         
-        if willPlayNew{
+        // check if user is coming from mini player of by tapping the main cell
+        if isComingFromMiniPlayer {
+            songg = currentPlaying
+        } else {
             songg = songs[position]
-            currentPlaying = songg
         }
         
-        if !willPlayNew {
-            songg = currentPlaying
+        // check if currentPlaying song is empty or not!
+        if SongService.shared.checkIfAleradyPlaying() == .isPausedd {
+            // play new fresh song when nothing is playing in player
+            currentPlaying = songg
+            print("Playing fresh song")
+        } else {
+            // some song is playing
+            if currentPlaying == songg {
+                // here i have to write the code to make a player which plays from same position as player
+                print("Playing same song")
+            }else {
+                // plays different song when a song is plating
+                print("Playing new song")
+            }
+            currentPlaying = nil
+            player.pause()
+            player = nil
+            print("Player removed ✅")
+            currentPlaying = songg
         }
         
         let song = songg!
@@ -234,8 +285,8 @@ extension PlayerVC {
         }
         
         // update UI
-        self.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        self.coverImageView2.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        self.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        self.coverImageView2.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         self.songNameLabel.text = name
         self.artistNameLabel.text = artist
         

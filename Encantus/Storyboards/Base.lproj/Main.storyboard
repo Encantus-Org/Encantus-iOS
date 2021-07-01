@@ -244,6 +244,7 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2PM-gp-Nr3">
                                         <rect key="frame" x="23" y="20" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <imageReference key="image" image="placeholder"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Song-Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J3e-NG-dkv">
                                         <rect key="frame" x="86" y="23" width="124" height="25"/>
@@ -545,6 +546,7 @@
         <image name="fwd-icon" width="24" height="24"/>
         <image name="homekit" catalog="system" width="128" height="106"/>
         <image name="options" width="15" height="3"/>
+        <image name="placeholder" width="1024" height="1024"/>
         <image name="play-icon" width="24" height="24"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <namedColor name="lightPurpleColor">

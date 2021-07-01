@@ -8,7 +8,7 @@
 import UIKit
 import Foundation
 
-struct Song {
+struct Song: Equatable {
     var name: String
     var album: String
     var artist: [String]
@@ -41,5 +41,13 @@ class SongService {
             }
         }
         return sorted
+    }
+    
+    func checkIfAleradyPlaying() -> SongStatus {
+        if currentPlaying == nil {
+            return .isPausedd
+        }else {
+            return .isPlayingg
+        }
     }
 }
