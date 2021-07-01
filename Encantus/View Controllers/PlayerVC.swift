@@ -5,20 +5,28 @@
 //  Created by Ankit Yadav on 29/06/21.
 //
 
+// TO DO - Seek function in media player
+// prepare next song to play after current song is player to half
+
 import UIKit
+import Combine
 import Foundation
-import AVFoundation
 import MediaPlayer
+import AVFoundation
 
 // keeping the player global to check if audio is already playing or not
-var player: AVAudioPlayer!
+var player: AVPlayer!
 
 class PlayerVC: UITableViewController {
     
     var songs = [Song]()
     var position: Int = 0
     var timer: Timer!
-    var isDragging: Bool = false
+    
+//    var observers: [AnyCancellable] = []
+//    let start = Date() // to be used when we're using combine timer
+    
+    var nowPlayingInfo = [String : Any]()
     
     @IBOutlet weak var coverImageView2: UIImageView!
     @IBOutlet weak var coverImageView: UIImageView!
@@ -39,13 +47,13 @@ class PlayerVC: UITableViewController {
         super.viewDidLoad()
         
         configure()
+        setupMediaPlayerNoticationView()
         
         // design
         self.coverImageView.layer.cornerRadius = self.coverImageView.bounds.height/12
         self.coverImageView2.layer.cornerRadius = self.coverImageView2.bounds.height/12
         self.playBttn.layer.cornerRadius = playBttn.layer.bounds.height/2
         self.songProgressSlider.setThumbImage(UIImage(named: "thumb-icon"), for: .normal)
-        self.songProgressSlider.isContinuous = false // to make slider change values when drag finishes
         
         // actions
         self.playBttn.addTarget(self, action: #selector(playBttnDidTap), for: .touchUpInside)
@@ -64,30 +72,44 @@ class PlayerVC: UITableViewController {
     }
     
     // for the controls from notification center media player
-    override func remoteControlReceived(with event: UIEvent?) {
-        if let event = event {
-            if event.type == .remoteControl{
-                switch event.subtype{
-                case .remoteControlPlay:
-                    player.play()
-                    setPlayBttnImage()
-                    break
-                case .remoteControlPause:
-                    player.pause()
-                    setPlayBttnImage()
-                    break
-                case .remoteControlNextTrack:
-                    forwardBttnDidTap()
-                    break
-                case .remoteControlPreviousTrack:
-                    backwardBttnDidTap()
-                    break
-                @unknown default:
-                    break
-                }
+    func setupMediaPlayerNoticationView(){
+        let commandCenter = MPRemoteCommandCenter.shared()
+        // Add handler for Play Command
+        commandCenter.playCommand.addTarget{ event in
+            self.playBttnDidTap()
+            return .success
+        }
+        // Add handler for Pause Command
+        commandCenter.pauseCommand.addTarget{event in
+            self.playBttnDidTap()
+            return .success
+        }
+        commandCenter.previousTrackCommand.addTarget{ event in
+            self.backwardBttnDidTap()
+            return .success
+        }
+        commandCenter.nextTrackCommand.addTarget { event in
+            self.forwardBttnDidTap()
+            return .success
+        }
+    }
+    
+    // to update now playing in notification center
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if object is AVPlayer {
+            switch player.timeControlStatus {
+            case .waitingToPlayAtSpecifiedRate,.paused:
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
+                MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
+            case .playing:
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(player.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
+                MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
             }
         }
     }
+    
     // config. table view
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0
@@ -99,18 +121,18 @@ class PlayerVC: UITableViewController {
 
 extension PlayerVC {
     func configure() {
-       
         let song = songs[position]
         
         // get song data
         let cover = song.cover
         let name = song.name
-        let artist = song.artist
-        
-        // url of song to play
-        let urlString = Bundle.main.path(forResource: name, ofType: "mp3")
+        let artist = song.artist[0]
+        let album = song.album
+        let genre = song.genres
+        let urlString = song.urlString
         
         do {
+            // to support media playing in background
             try AVAudioSession.sharedInstance().setMode(.default)
             try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
             
@@ -122,14 +144,14 @@ extension PlayerVC {
                 self.present(alert,animated: true)
             }
             
-            guard let urlString = urlString else {return}
-            player = try AVAudioPlayer(contentsOf: URL(string: urlString)!)
+            player = AVPlayer(url: URL(string: urlString)!)
+            player.play()
             
             guard let player = player else {return}
             
             // if there's already a song playing, then stop that and start selected song
             if player.isPlaying {
-                player.stop()
+                player.pause()
             }
             
             // play the somg
@@ -138,11 +160,39 @@ extension PlayerVC {
             // schedule timer
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(changeSliderValueWithTimer), userInfo: nil, repeats: true)
             
-            // send info to media player for displaying data in notification center
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = [MPMediaItemPropertyTitle: name,
-                                                              MPMediaItemPropertyArtist: artist,
-                                                              MPMediaItemPropertyPlaybackDuration: player.duration,
-                                                              MPMediaItemPropertyArtwork: MPMediaItemArtwork(image: cover!)]
+              // timer with combine
+//            Timer.publish(every: 1.0, tolerance: 1.0, on: .main, in: .common)
+//                .autoconnect() // .autoconnect() allows us to start a timer once we have our song
+//                .map({ (output) in
+//                    return output.timeIntervalSince(self.start)
+//                })
+//                .map({ (timeInterval) in
+//                    return Int(timeInterval)
+//                })
+//                .sink { (seconds) in
+//                    self.currentTimeLabel.text = player.currentTime().minutes
+//                    self.songProgressSlider.value = Float(CMTimeGetSeconds(player.currentTime()))
+//                }
+//                .store(in: &observers)
+            
+            // Define Now Playing Info
+            nowPlayingInfo[MPMediaItemPropertyTitle] = name
+            nowPlayingInfo[MPMediaItemPropertyArtist] = artist
+            nowPlayingInfo[MPMediaItemPropertyGenre] = genre
+            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
+            if let image = cover {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] =
+                    MPMediaItemArtwork(boundsSize: image.size) { size in
+                        return image
+                }
+            }
+            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
+            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.currentItem?.asset.duration.seconds
+            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
+
+            // Set the metadata
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            
             UIApplication.shared.beginReceivingRemoteControlEvents()
             becomeFirstResponder()
         } catch {
@@ -155,25 +205,30 @@ extension PlayerVC {
         self.coverImageView2.image = cover
         self.songNameLabel.text = name
         self.artistNameLabel.text = artist
-        self.completeSongLengthLabel.text = player.duration.minutes()
         
         // song progress slider
         self.songProgressSlider.minimumValue = 0.0
-        self.songProgressSlider.maximumValue = Float(player.duration)
+        // get song's total duration
+        let duration = player.currentItem?.asset.duration
+        DispatchQueue.main.async {
+            self.completeSongLengthLabel.text = duration?.minutes
+            self.songProgressSlider.maximumValue = Float(CMTimeGetSeconds(duration!))
+        }
         
         // configure context menu for button
         self.optionsBttn.menu = UIMenu(children: [
             UIAction(title: "Share",image: UIImage(systemName: "square.and.arrow.up")) { [self] _ in
-            //let message1 = "Download Dinero App to manage your online subscriptions."
+            let message = "Hey, I'm listenting to \(artist) on Encantus. Join me in."
             let image = songs[position].cover
-//            let myWebsite = NSURL(string:"https://apps.apple.com/us/app/dinero-subscription-manager/id1545370811")
-            let shareAll = [image]
+            let myWebsite = NSURL(string: urlString)
+            let shareAll = [image! ,message, myWebsite!] as [Any]
             let activityViewController = UIActivityViewController(activityItems: shareAll as [Any], applicationActivities: nil)
             activityViewController.popoverPresentationController?.sourceView = self.view
             self.present(activityViewController, animated: true, completion: nil)
             },
             UIAction(title: "Copy link",image: UIImage(systemName: "link")) { _ in
-                
+            let clipBoard = UIPasteboard.general
+            clipBoard.string = urlString
             },
             UIAction(title: "Go to artist",image: UIImage(systemName: "music.mic")) { _ in
                 
@@ -183,32 +238,36 @@ extension PlayerVC {
             }
         ])
     }
-    
-    // change value of audio's poition by sliding
+                                
+    // change value of audio's poition by dragging
     @objc func changeSliderValueOnDrag() {
-        if player.isPlaying {
-            player.stop()
-            let curTime = songProgressSlider.value
-            player.currentTime = TimeInterval(curTime)
-            player.play()
-        } else {
-            let curTime = songProgressSlider.value
-            player.currentTime = TimeInterval(curTime)
+        let seconds: Int64 = Int64(songProgressSlider.value)
+        let targetTime: CMTime = CMTimeMake(value: seconds, timescale: 1)
+        
+        // to update now playing in notification center
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
+        MPNowPlayingInfoCenter.default().nowPlayingInfo=nowPlayingInfo
+        
+        player.seek(to: targetTime) { (isCompleted) in
+            // to update now playing in notification center
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
         }
         self.currentTimeLabel.text = String(TimeInterval(songProgressSlider.value).minutes())
     }
     
     // change values of slider and labe with timer
     @objc func changeSliderValueWithTimer(){
-        let curValue = Float(player.currentTime)
-        self.currentTimeLabel.text = player.currentTime.minutes()
-        songProgressSlider.value = curValue
+        self.currentTimeLabel.text = player.currentTime().minutes
+        songProgressSlider.value = Float(CMTimeGetSeconds(player.currentTime()))
     }
     
     @objc func backwardBttnDidTap() {
         if position>0 {
             position = position - 1
-            player.stop()
+            player.pause()
         }
         configure()
     }
@@ -217,7 +276,7 @@ extension PlayerVC {
             // pause audio
             player.pause()
             // show play button
-            playBttn.setImage(UIImage(named: "play-icon"), for: .normal)
+            setPlayBttnImage()
             // shrink image
             UIView.animate(withDuration: 0.6,
                 animations: {
@@ -228,7 +287,7 @@ extension PlayerVC {
             // play audio
             player.play()
             // show pause button
-            playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
+            setPlayBttnImage()
             // increase image size
             UIView.animate(withDuration: 0.6,
                 animations: {
@@ -244,7 +303,7 @@ extension PlayerVC {
     @objc func forwardBttnDidTap() {
         if position < (songs.count - 1) {
             position = position + 1
-            player.stop()
+            player.pause()
         }
         configure()
     }

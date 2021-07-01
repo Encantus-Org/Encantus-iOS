@@ -1,20 +1,33 @@
 PODS:
+  - Alamofire (4.9.1)
+  - AlamofireImage (3.6.0):
+    - Alamofire (~> 4.9)
   - Gemini (1.4.0)
   - Hero (1.5.0)
+  - Kingfisher (4.10.1)
 
 DEPENDENCIES:
+  - Alamofire
+  - AlamofireImage
   - Gemini
   - Hero
+  - Kingfisher
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - AlamofireImage
     - Gemini
     - Hero
+    - Kingfisher
 
 SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  AlamofireImage: be9963c6582d68b39e89191f64c82a7d7bf40fdd
   Gemini: 4ad915cca8805577fe3021e02feeca2b77dcdbfc
   Hero: b7385b75e7259da62f4f85462f59a5082d66b058
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
 
-PODFILE CHECKSUM: ae5e0f6bd3feee2f8bfc520ce99f46954f1b0278
+PODFILE CHECKSUM: 971104eac1e7d377d57ec3c5d09771e61ad49169
 
 COCOAPODS: 1.10.1

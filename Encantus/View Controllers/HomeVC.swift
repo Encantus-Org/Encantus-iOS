@@ -6,13 +6,19 @@
 //
 
 import UIKit
-import Gemini
 import Combine
+import Alamofire
 
 class CategoryCell: UICollectionViewCell {
     @IBOutlet weak var textLabel: UILabel!
+    
+    override var isSelected: Bool {
+        didSet {
+            textLabel.textColor = UIColor(named: "lightPurpleColor")
+        }
+    }
 }
-class SongsCell: GeminiCell {
+class SongsCell: UICollectionViewCell {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var songNameLabel: UILabel!
@@ -25,6 +31,9 @@ class HomeVC: UITableViewController {
     var observers: [AnyCancellable] = []
     private var categories = [String]()
     private var songs = [Song]()
+    private var sortedSongs = [Song]()
+    
+    @IBOutlet weak var testImageView: UIImageView!
     
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     @IBOutlet weak var categoriesCollectionViewLayout: UICollectionViewFlowLayout! {
@@ -32,7 +41,7 @@ class HomeVC: UITableViewController {
             categoriesCollectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
-    @IBOutlet weak var songCollectionView: GeminiCollectionView!
+    @IBOutlet weak var songCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,14 +55,6 @@ class HomeVC: UITableViewController {
         
         /// load` background image `view
 //        self.view.addBackground(imageName: "bg-image")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        // Configure cards animation
-        songCollectionView.gemini
-            .scaleAnimation()
-            .scale(0.65)
-            .scaleEffect(.scaleUp) // or .scaleDown
     }
     
     // config. table view
@@ -97,7 +98,22 @@ extension HomeVC {
                 }
             }, receiveValue: { [weak self] value in
                 self!.songs = value
+                self!.sortedSongs = value
                 self!.songCollectionView.reloadData()
+            }).store(in: &observers)
+        // load image
+        DataService.shared.getCoverWith(url: "https://dl.dropboxusercontent.com/s/nyoiszqo3fax83s/Phir%20Chala.png?dl=0")
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                    break
+                }
+            }, receiveValue: { [weak self] value in
+                self?.testImageView.image = value
             }).store(in: &observers)
     }
 }
@@ -109,7 +125,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         if collectionView == categoryCollectionView {
             return categories.count
         } else {
-            return songs.count
+            return sortedSongs.count
         }
     }
     
@@ -129,9 +145,9 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             let cell: SongsCell = collectionView.dequeueReusableCell(withReuseIdentifier: "SongsCell", for: indexPath) as! SongsCell
             
             // get data
-            let song = songs[indexPath.row]
+            let song = sortedSongs[indexPath.row]
             let name = song.name
-            let artist = song.artist
+            let artist = song.artist[0]
             let cover = song.cover
             
             // update UI
@@ -153,18 +169,27 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == categoryCollectionView {
-            
-        }
-    }
-    
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.songCollectionView.animateVisibleCells()
-        _ = CGPoint(x: scrollView.contentOffset.x + (scrollView.frame.width / 2), y: (scrollView.frame.height / 2))
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if let cell = cell as? SongsCell {
-            self.songCollectionView.animateCell(cell)
+            let genres = categories[indexPath.row]
+            // if generes is selected to all then sort the array to all songs
+            if genres == "All"{
+                sortedSongs = songs
+            } else {
+                // if generes is selected to `any specific calue` then sort the array accordingly
+                sortedSongs = SongService.shared.sortBy(genres: genres, arrayToSort: self.songs)
+            }
+            // reload the collection view to see the updated
+            UIView.transition(with: songCollectionView, duration: 0.5, options: .transitionCrossDissolve, animations: {self.songCollectionView.reloadData()}, completion: nil)
+            // set color of all cells white
+            for section in 0..<self.categoryCollectionView.numberOfSections{
+                for row in 0..<self.categoryCollectionView.numberOfItems(inSection: section){
+                    let cell = self.categoryCollectionView.cellForItem(at: IndexPath(row: row, section: section)) as? CategoryCell
+                    cell!.textLabel.textColor = UIColor.white
+                }
+            }
+            // set color of selected cell purple
+            if let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell {
+                cell.isSelected = true
+            }
         }
     }
     
@@ -178,12 +203,12 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+            sheet.preferredCornerRadius = 30
         }
         
-        vc.songs = songs
+        vc.songs = sortedSongs
         vc.position = buttonTag
         
         self.present(vc, animated: true)
     }
-    
 }

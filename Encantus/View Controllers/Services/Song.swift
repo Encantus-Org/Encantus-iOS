@@ -11,9 +11,10 @@ import Foundation
 struct Song {
     var name: String
     var album: String
-    var artist: String
-    var artist2: String
+    var artist: [String]
     var cover: UIImage?
+    var genres: String
+    var urlString: String
 }
 
 enum SongStatus {
@@ -30,5 +31,15 @@ class SongService {
         } else {
             return .isPausedd
         }
+    }
+    
+    func sortBy(genres: String, arrayToSort: [Song]) -> [Song] {
+        var sorted = [Song]()
+        for song in arrayToSort {
+            if song.genres == genres{
+                sorted.append(song)
+            }
+        }
+        return sorted
     }
 }
