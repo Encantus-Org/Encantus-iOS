@@ -7,11 +7,10 @@
 
 import UIKit
 import Combine
-import Alamofire
+import Kingfisher
 
 class CategoryCell: UICollectionViewCell {
     @IBOutlet weak var textLabel: UILabel!
-    
     override var isSelected: Bool {
         didSet {
             textLabel.textColor = UIColor(named: "lightPurpleColor")
@@ -33,7 +32,14 @@ class HomeVC: UITableViewController {
     private var songs = [Song]()
     private var sortedSongs = [Song]()
     
-    @IBOutlet weak var testImageView: UIImageView!
+    // MiniPlayer config.
+    @IBOutlet var miniPlayerView: UIView!
+    @IBOutlet weak var currentSongCoverImageView: UIImageView!
+    @IBOutlet weak var currentSongNameLabel: UILabel!
+    @IBOutlet weak var currentSongArtistNameLabel: UILabel!
+    @IBOutlet weak var playBttn: UIButton!
+    @IBOutlet weak var backwardBttn: UIButton!
+    @IBOutlet weak var forwardBttn: UIButton!
     
     @IBOutlet weak var categoryCollectionView: UICollectionView!
     @IBOutlet weak var categoriesCollectionViewLayout: UICollectionViewFlowLayout! {
@@ -48,13 +54,37 @@ class HomeVC: UITableViewController {
         
         fetchData()
         
+        // design
+        currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/12
+        currentSongCoverImageView.layer.masksToBounds = false
+        currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
+        miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taped(_:)))
+        miniPlayerView.addGestureRecognizer(tapGesture)
+        miniPlayerView.isUserInteractionEnabled  = true
+        view.addSubview(miniPlayerView)
         // set the theme to always dark
         UIApplication.shared.windows.forEach { window in
             window.overrideUserInterfaceStyle = .dark
         }
-        
-        /// load` background image `view
-//        self.view.addBackground(imageName: "bg-image")
+    }
+    @objc func taped(_ sender: UITapGestureRecognizer) {
+        if SongService.shared.checkStatus() == .isPlayingg {
+            print("Present vc")
+            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
+            vc.modalPresentationStyle = .popover
+            
+            if let sheet = vc.popoverPresentationController?.adaptiveSheetPresentationController {
+                sheet.detents = [.large()]
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+                sheet.preferredCornerRadius = 30
+            }
+            vc.willPlayNew = false
+            self.present(vc, animated: true)
+        } else {
+            print("error")
+        }
     }
     
     // config. table view
@@ -100,9 +130,18 @@ extension HomeVC {
                 self!.songs = value
                 self!.sortedSongs = value
                 self!.songCollectionView.reloadData()
+//                self!.loadImages()
             }).store(in: &observers)
+        
+    }
+    
+    func loadImages() {
         // load image
-        DataService.shared.getCoverWith(url: "https://dl.dropboxusercontent.com/s/nyoiszqo3fax83s/Phir%20Chala.png?dl=0")
+        var urls = [String]()
+        for song in sortedSongs {
+            urls.append(song.coverUrlString)
+        }
+        DataService.shared.getCoverWith(urls: urls )
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -113,7 +152,7 @@ extension HomeVC {
                     break
                 }
             }, receiveValue: { [weak self] value in
-                self?.testImageView.image = value
+                print("values: \(value)")
             }).store(in: &observers)
     }
 }
@@ -148,12 +187,12 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             let song = sortedSongs[indexPath.row]
             let name = song.name
             let artist = song.artist[0]
-            let cover = song.cover
+            let coverUrl = song.coverUrlString
             
             // update UI
             cell.songNameLabel.text = name
             cell.artistNameLabel.text = artist
-            cell.coverImageView.image = cover
+            cell.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
             
             // design
             cell.blurView.layer.masksToBounds = true
@@ -190,6 +229,27 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             if let cell = collectionView.cellForItem(at: indexPath) as? CategoryCell {
                 cell.isSelected = true
             }
+        } else {
+            let buttonTag = indexPath.row
+            
+            guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
+            vc.modalPresentationStyle = .popover
+            
+            if let sheet = vc.popoverPresentationController?.adaptiveSheetPresentationController {
+                sheet.detents = [.large()]
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = true
+                sheet.preferredCornerRadius = 30
+            }
+            
+            vc.songs = sortedSongs
+            vc.position = buttonTag
+            vc.willPlayNew = true
+            
+            self.present(vc, animated: true)
+            
+            print(sortedSongs[buttonTag].name)
+            configureMiniPlayer(songs: sortedSongs, position: buttonTag)
         }
     }
     
@@ -208,7 +268,52 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         
         vc.songs = sortedSongs
         vc.position = buttonTag
+        vc.willPlayNew = true
         
         self.present(vc, animated: true)
+        
+        print(sortedSongs[buttonTag].name)
+        configureMiniPlayer(songs: sortedSongs, position: buttonTag)
+    }
+}
+
+// MiniPlayer
+extension HomeVC {
+    func configureMiniPlayer(songs: [Song], position: Int) {
+        let song = songs[position]
+        currentSongNameLabel.text = song.name
+        currentSongCoverImageView.kf.setImage(with: URL(string: song.coverUrlString), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        currentSongArtistNameLabel.text = song.artist[0]
+        playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
+        backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
+        forwardBttn.addTarget(self, action: #selector(forwardBttnDidTap), for: .touchUpInside)
+        playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
+    }
+    @objc func backwardBttnDidTap() {
+//        if position>0 {
+//            position = position - 1
+//            player.pause()
+//        }
+//        configure()
+    }
+    @objc func playBttnDidTapp() {
+        if player.isPlaying {
+            // pause audio
+            player!.pause()
+            // show play button
+            self.playBttn.setImage(UIImage(named: "play-icon"), for: .normal)
+        } else {
+            // play audio
+            player.play()
+            // show pause button
+            self.playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
+        }
+    }
+    @objc func forwardBttnDidTap() {
+//        if position < (songs.count - 1) {
+//            position = position + 1
+//            player.pause()
+//        }
+//        configure()
     }
 }

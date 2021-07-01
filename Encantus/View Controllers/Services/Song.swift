@@ -12,9 +12,9 @@ struct Song {
     var name: String
     var album: String
     var artist: [String]
-    var cover: UIImage?
     var genres: String
     var urlString: String
+    var coverUrlString: String
 }
 
 enum SongStatus {

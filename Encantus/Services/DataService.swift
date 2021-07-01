@@ -23,25 +23,36 @@ class DataService {
     func getSongs() -> Future<[Song],Error> {
         return Future { promixe in
             var songsarr = [Song]()
-            songsarr.append(Song(name: "Sidhu Son", album: "Moosetape", artist: ["Sidhu Moosewala"], cover: UIImage(named: "sample-cover"), genres: "Punjabi", urlString: "https://dl.dropboxusercontent.com/s/0qbqiaoxpq4wgrp/SidhuSon.mp3?dl=0"))
-            songsarr.append(Song(name: "Regret", album: "Moosetape", artist: ["Sidhu Moosewala"], cover: UIImage(named: "regret-cover"), genres: "Punjabi", urlString: "https://dl.dropboxusercontent.com/s/xrxp8256xpwiv5o/Regret.mp3?dl=0"))
-            songsarr.append(Song(name: "Phir Chala", album: "Single", artist: ["Jubin Nautiyal","Payal Dev"], cover: UIImage(named: "phir-chala-cover"), genres: "Bollywood", urlString: "https://dl.dropboxusercontent.com/s/ja04bu4fhgjomh6/Phir%20Chala.mp3?dl=0"))
+            songsarr.append(Song(name: "Sidhu Son", album: "Moosetape", artist: ["Sidhu Moosewala"], genres: "Punjabi", urlString: "https://dl.dropboxusercontent.com/s/0qbqiaoxpq4wgrp/SidhuSon.mp3?dl=0", coverUrlString: "https://dl.dropboxusercontent.com/s/a2oylajf4dorafp/Sidhu%20Son.png?dl=0"))
+            
+            songsarr.append(Song(name: "Regret", album: "Moosetape", artist: ["Sidhu Moosewala"], genres: "Punjabi", urlString: "https://dl.dropboxusercontent.com/s/xrxp8256xpwiv5o/Regret.mp3?dl=0", coverUrlString: "https://dl.dropboxusercontent.com/s/hif3mf5on1dmyz6/Regret.png?dl=0"))
+            
+            songsarr.append(Song(name: "Phir Chala", album: "Single", artist: ["Jubin Nautiyal","Payal Dev"], genres: "Bollywood", urlString: "https://dl.dropboxusercontent.com/s/ja04bu4fhgjomh6/Phir%20Chala.mp3?dl=0", coverUrlString: "https://dl.dropboxusercontent.com/s/nyoiszqo3fax83s/Phir%20Chala.png?dl=0"))
             promixe(.success(songsarr))
         }
     }
     
-    func getCoverWith(url: String) -> Future<UIImage,Error> {
+    func getCoverWith(urls: [String]) -> Future<[UIImage],Error> {
         return Future { promixe in
-            var image = UIImage(named: "nil")
-            Alamofire.request(url, method: .get).responseData(queue: DispatchQueue.main, completionHandler: {
-                (response) in
-                if response.error == nil{
-                    if let data = response.data {
-                        image = UIImage(data: data)
-                        promixe(.success(image!))
+            var images = [UIImage]()
+            
+            let asyncGroup = DispatchGroup()
+            
+            for url in urls {
+                asyncGroup.enter()
+                Alamofire.request(url, method: .get).responseData(queue: DispatchQueue.main, completionHandler: {
+                    (response) in
+                    if response.error == nil{
+                        if let data = response.data {
+                            images.append(UIImage(data: data)!)
+                            asyncGroup.leave()
+                        }
                     }
-                }
-            })
+                })
+            }
+            asyncGroup.notify(queue: .main) {
+                promixe(.success(images))
+            }
         }
     }
 }

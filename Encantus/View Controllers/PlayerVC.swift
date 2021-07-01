@@ -5,23 +5,25 @@
 //  Created by Ankit Yadav on 29/06/21.
 //
 
-// TO DO - Seek function in media player
-// prepare next song to play after current song is player to half
+// TO DO -
 
 import UIKit
 import Combine
 import Foundation
+import Kingfisher
 import MediaPlayer
 import AVFoundation
 
 // keeping the player global to check if audio is already playing or not
 var player: AVPlayer!
+var currentPlaying: Song!
 
 class PlayerVC: UITableViewController {
     
     var songs = [Song]()
     var position: Int = 0
     var timer: Timer!
+    var willPlayNew: Bool!
     
 //    var observers: [AnyCancellable] = []
 //    let start = Date() // to be used when we're using combine timer
@@ -45,7 +47,6 @@ class PlayerVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configure()
         setupMediaPlayerNoticationView()
         
@@ -106,6 +107,8 @@ class PlayerVC: UITableViewController {
                 nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(player.currentTime())
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
+            @unknown default:
+                break
             }
         }
     }
@@ -121,15 +124,26 @@ class PlayerVC: UITableViewController {
 
 extension PlayerVC {
     func configure() {
-        let song = songs[position]
+        var songg: Song?
         
+        if willPlayNew{
+            songg = songs[position]
+            currentPlaying = songg
+        }
+        
+        if !willPlayNew {
+            songg = currentPlaying
+        }
+        
+        let song = songg!
         // get song data
-        let cover = song.cover
+        let coverUrl = song.coverUrlString
         let name = song.name
         let artist = song.artist[0]
         let album = song.album
         let genre = song.genres
         let urlString = song.urlString
+        let cover = UIImage(named: "encantus-logo")
         
         do {
             // to support media playing in background
@@ -193,6 +207,25 @@ extension PlayerVC {
             // Set the metadata
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
             
+            let commandCenter = MPRemoteCommandCenter.shared()
+                
+            // Scrubber
+            commandCenter.changePlaybackPositionCommand.addTarget { [weak self](remoteEvent) -> MPRemoteCommandHandlerStatus in
+                guard let self = self else {return .commandFailed}
+                let playerRate = player.rate
+                if let event = remoteEvent as? MPChangePlaybackPositionCommandEvent {
+                    player.seek(to: CMTime(seconds: event.positionTime, preferredTimescale: CMTimeScale(1000)), completionHandler: { [weak self](success) in
+                        guard self != nil else {return}
+                        if success {
+                            player.rate = playerRate
+                        }
+                    })
+                    return .success
+                 }
+                return .commandFailed
+            }
+
+            // Register to receive events
             UIApplication.shared.beginReceivingRemoteControlEvents()
             becomeFirstResponder()
         } catch {
@@ -201,8 +234,8 @@ extension PlayerVC {
         }
         
         // update UI
-        self.coverImageView.image = cover
-        self.coverImageView2.image = cover
+        self.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        self.coverImageView2.kf.setImage(with: URL(string: coverUrl), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         self.songNameLabel.text = name
         self.artistNameLabel.text = artist
         
@@ -219,7 +252,7 @@ extension PlayerVC {
         self.optionsBttn.menu = UIMenu(children: [
             UIAction(title: "Share",image: UIImage(systemName: "square.and.arrow.up")) { [self] _ in
             let message = "Hey, I'm listenting to \(artist) on Encantus. Join me in."
-            let image = songs[position].cover
+            let image = cover
             let myWebsite = NSURL(string: urlString)
             let shareAll = [image! ,message, myWebsite!] as [Any]
             let activityViewController = UIActivityViewController(activityItems: shareAll as [Any], applicationActivities: nil)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */; };
 		4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */; };
+		4141876E268E1CF400745DA6 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141876D268E1CF400745DA6 /* Player.swift */; };
 		4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC77268B7B7D00D83BA6 /* Song.swift */; };
 		4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC7C268B7C3D00D83BA6 /* DataService.swift */; };
 		4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC80268B881C00D83BA6 /* PlayerVC.swift */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.release.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.release.xcconfig"; sourceTree = "<group>"; };
 		4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+extensions.swift"; sourceTree = "<group>"; };
+		4141876D268E1CF400745DA6 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		4156DC77268B7B7D00D83BA6 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		4156DC7C268B7C3D00D83BA6 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4156DC80268B881C00D83BA6 /* PlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerVC.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				4156DC77268B7B7D00D83BA6 /* Song.swift */,
+				4141876D268E1CF400745DA6 /* Player.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4141876E268E1CF400745DA6 /* Player.swift in Sources */,
 				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
 				41CF29E4268CD33400B3E71A /* CheatSheet.swift in Sources */,
 				4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */,
