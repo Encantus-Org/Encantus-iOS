@@ -5,8 +5,6 @@
 //  Created by Ankit Yadav on 29/06/21.
 //
 
-// TO DO - (error) -> When user come from miniplayer song start from 00:00
-
 import UIKit
 import Combine
 import Foundation
@@ -14,21 +12,9 @@ import Kingfisher
 import MediaPlayer
 import AVFoundation
 
-// keeping the player global to check if audio is already playing or not
-var player: AVPlayer!
-var currentPlaying: Song!
-
 class PlayerVC: UITableViewController {
     
-    var songs = [Song]()
-    var position: Int = 0
-    var timer: Timer!
     var isComingFromMiniPlayer: Bool = false
-    
-//    var observers: [AnyCancellable] = []
-//    let start = Date() // to be used when we're using combine timer
-    
-    var nowPlayingInfo = [String : Any]()
     
     @IBOutlet weak var coverImageView2: UIImageView!
     @IBOutlet weak var coverImageView: UIImageView!
@@ -47,7 +33,6 @@ class PlayerVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
         setupMediaPlayerNoticationView()
         
         // design
@@ -63,13 +48,16 @@ class PlayerVC: UITableViewController {
         self.optionsBttn.showsMenuAsPrimaryAction = true
         self.optionsBttn.changesSelectionAsPrimaryAction = false
     }
-    
     override func viewWillAppear(_ animated: Bool) {
-        setPlayBttnImage()
+        configure()
+        if isComingFromMiniPlayer {
+            let MiniPlayer = MiniPlayer.shared
+            MiniPlayer.setPlayBttnImage(playBttn)
+            MiniPlayer.setImageAnimation(coverImageView)
+        }
     }
-    
     @IBAction func SliderValueDidChanger(_ sender: Any) {
-        changeSliderValueOnDrag()
+        MiniPlayer.shared.changeSliderValueOnDrag()
     }
     
     // for the controls from notification center media player
@@ -97,14 +85,16 @@ class PlayerVC: UITableViewController {
     
     // to update now playing in notification center
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        let MiniPlayer = MiniPlayer.shared
+        var nowPlayingInfo = MiniPlayer.nowPlayingInfo
         if object is AVPlayer {
-            switch player.timeControlStatus {
+            switch MiniPlayer.player!.timeControlStatus {
             case .waitingToPlayAtSpecifiedRate,.paused:
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.player!.currentTime())
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
                 MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
             case .playing:
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(player.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(MiniPlayer.player!.currentTime())
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
             @unknown default:
@@ -122,187 +112,49 @@ class PlayerVC: UITableViewController {
     }
 }
 
+// configured player here
 extension PlayerVC {
-//    func con() {
-//        var songg: Song?
-//        // check if user is coming from mini player of by tapping the main cell
-//        if isComingFromMiniPlayer {
-//            songg = currentPlaying
-//        } else {
-//            songg = songs[position]
-//        }
-//
-//        // check if currentPlaying song is empty or not!
-//        if SongService.shared.checkIfAleradyPlaying() == .isPausedd {
-//            // play new fresh song when nothing is playing in player
-//            currentPlaying = songg
-//            configure(song: songg!)
-//            print("Playing fresh song")
-//        } else {
-//            // some song is playing
-//            if currentPlaying == songg {
-//                // here i have to write the code to make a player which plays from same position as player
-//                print("Playing same song")
-//            }else {
-//                // plays different song when a song is plating
-//                print("Playing new song")
-//            }
-//            currentPlaying = nil
-//            player.pause()
-//            player = nil
-//            print("Player removed ✅")
-//            currentPlaying = songg
-//        }
-//
-//    }
     func configure() {
-        var songg: Song?
-        
         // check if user is coming from mini player of by tapping the main cell
         if isComingFromMiniPlayer {
-            songg = currentPlaying
+            // We're not configuring the player again here because song is already playing and we don't want to have 2 songs playing at the same time
+            let MiniPlayer = MiniPlayer.shared
+            let songs = MiniPlayer.array()
+            let position = MiniPlayer.position()
+            let song = songs[position]
+            
+            configureOptionsBttn(forSong: song)
+            // display a song's info if coming from miniPlayerView
+            MiniPlayer.currentTimeLabel = self.currentTimeLabel
+            MiniPlayer.songProgressSlider = self.songProgressSlider
+            
+            MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
         } else {
-            songg = songs[position]
-        }
-        
-        // check if currentPlaying song is empty or not!
-        if SongService.shared.checkIfAleradyPlaying() == .isPausedd {
-            // play new fresh song when nothing is playing in player
-            currentPlaying = songg
-            print("Playing fresh song")
-        } else {
-            // some song is playing
-            if currentPlaying == songg {
-                // here i have to write the code to make a player which plays from same position as player
-                print("Playing same song")
-            }else {
-                // plays different song when a song is plating
-                print("Playing new song")
+            let MiniPlayer = MiniPlayer.shared
+            let songs = MiniPlayer.array()
+            let position = MiniPlayer.position()
+            let song = songs[position]
+            
+            configureOptionsBttn(forSong: song)
+            DispatchQueue.main.async {
+                MiniPlayer.currentTimeLabel = self.currentTimeLabel
+                MiniPlayer.songProgressSlider = self.songProgressSlider
+                
+                MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
             }
-            currentPlaying = nil
-            player.pause()
-            player = nil
-            print("Player removed ✅")
-            currentPlaying = songg
         }
-        
-        let song = songg!
+    }
+    func configureOptionsBttn(forSong: Song) {
+        let song = forSong
         // get song data
-        let coverUrl = song.coverUrlString
-        let name = song.name
         let artist = song.artist[0]
-        let album = song.album
-        let genre = song.genres
         let urlString = song.urlString
         let cover = UIImage(named: "encantus-logo")
-        
-        do {
-            // to support media playing in background
-            try AVAudioSession.sharedInstance().setMode(.default)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            
-            // to play the music in background
-            do {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
-            } catch {
-                let alert = CheatSheet.shared.simpleAlert(title: error.localizedDescription, message: "", actionTitle: "Okay, got it!")
-                self.present(alert,animated: true)
-            }
-            
-            player = AVPlayer(url: URL(string: urlString)!)
-            player.play()
-            
-            guard let player = player else {return}
-            
-            // if there's already a song playing, then stop that and start selected song
-            if player.isPlaying {
-                player.pause()
-            }
-            
-            // play the somg
-            player.play()
-            
-            // schedule timer
-            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(changeSliderValueWithTimer), userInfo: nil, repeats: true)
-            
-              // timer with combine
-//            Timer.publish(every: 1.0, tolerance: 1.0, on: .main, in: .common)
-//                .autoconnect() // .autoconnect() allows us to start a timer once we have our song
-//                .map({ (output) in
-//                    return output.timeIntervalSince(self.start)
-//                })
-//                .map({ (timeInterval) in
-//                    return Int(timeInterval)
-//                })
-//                .sink { (seconds) in
-//                    self.currentTimeLabel.text = player.currentTime().minutes
-//                    self.songProgressSlider.value = Float(CMTimeGetSeconds(player.currentTime()))
-//                }
-//                .store(in: &observers)
-            
-            // Define Now Playing Info
-            nowPlayingInfo[MPMediaItemPropertyTitle] = name
-            nowPlayingInfo[MPMediaItemPropertyArtist] = artist
-            nowPlayingInfo[MPMediaItemPropertyGenre] = genre
-            nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = album
-            if let image = cover {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] =
-                    MPMediaItemArtwork(boundsSize: image.size) { size in
-                        return image
-                }
-            }
-            nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = player.currentTime().seconds
-            nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = player.currentItem?.asset.duration.seconds
-            nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = player.rate
-
-            // Set the metadata
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-            
-            let commandCenter = MPRemoteCommandCenter.shared()
-                
-            // Scrubber
-            commandCenter.changePlaybackPositionCommand.addTarget { [weak self](remoteEvent) -> MPRemoteCommandHandlerStatus in
-                guard let self = self else {return .commandFailed}
-                let playerRate = player.rate
-                if let event = remoteEvent as? MPChangePlaybackPositionCommandEvent {
-                    player.seek(to: CMTime(seconds: event.positionTime, preferredTimescale: CMTimeScale(1000)), completionHandler: { [weak self](success) in
-                        guard self != nil else {return}
-                        if success {
-                            player.rate = playerRate
-                        }
-                    })
-                    return .success
-                 }
-                return .commandFailed
-            }
-
-            // Register to receive events
-            UIApplication.shared.beginReceivingRemoteControlEvents()
-            becomeFirstResponder()
-        } catch {
-            let alert = CheatSheet.shared.simpleAlert(title: error.localizedDescription, message: "", actionTitle: "Okay, got it!")
-            self.present(alert,animated: true)
-        }
-        
-        // update UI
-        self.coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        self.coverImageView2.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        self.songNameLabel.text = name
-        self.artistNameLabel.text = artist
-        
-        // song progress slider
-        self.songProgressSlider.minimumValue = 0.0
-        // get song's total duration
-        let duration = player.currentItem?.asset.duration
-        DispatchQueue.main.async {
-            self.completeSongLengthLabel.text = duration?.minutes
-            self.songProgressSlider.maximumValue = Float(CMTimeGetSeconds(duration!))
-        }
         
         // configure context menu for button
         self.optionsBttn.menu = UIMenu(children: [
             UIAction(title: "Share",image: UIImage(systemName: "square.and.arrow.up")) { [self] _ in
-            let message = "Hey, I'm listenting to \(artist) on Encantus. Join me in."
+            let message = "Hey, I'm listenting to \(artist) on Encantus App. Join me in."
             let image = cover
             let myWebsite = NSURL(string: urlString)
             let shareAll = [image! ,message, myWebsite!] as [Any]
@@ -315,91 +167,61 @@ extension PlayerVC {
             clipBoard.string = urlString
             },
             UIAction(title: "Go to artist",image: UIImage(systemName: "music.mic")) { _ in
-                
+
             },
             UIAction(title: "Go to album",image: UIImage(systemName: "square.stack")) { _ in
-                
+
             }
         ])
     }
-                                
-    // change value of audio's poition by dragging
-    @objc func changeSliderValueOnDrag() {
-        let seconds: Int64 = Int64(songProgressSlider.value)
-        let targetTime: CMTime = CMTimeMake(value: seconds, timescale: 1)
-        
-        // to update now playing in notification center
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
-        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
-        MPNowPlayingInfoCenter.default().nowPlayingInfo=nowPlayingInfo
-        
-        player.seek(to: targetTime) { (isCompleted) in
-            // to update now playing in notification center
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(player.currentTime())
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
-        }
-        self.currentTimeLabel.text = String(TimeInterval(songProgressSlider.value).minutes())
-    }
-    
-    // change values of slider and labe with timer
-    @objc func changeSliderValueWithTimer(){
-        self.currentTimeLabel.text = player.currentTime().minutes
-        songProgressSlider.value = Float(CMTimeGetSeconds(player.currentTime()))
-    }
-    
     @objc func backwardBttnDidTap() {
+        let MiniPlayer = MiniPlayer.shared
+        let songs = MiniPlayer.array()
+        var position = MiniPlayer.position()
+        
+        // change the position of song in an array
         if position>0 {
             position = position - 1
-            player.pause()
         }
-        configure()
+        // update current playing value after change the position
+        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        
+        let song = songs[position]
+        // configure option's menu button when song changes
+        configureOptionsBttn(forSong: song)
+        // update changes in UI of miniPlayer
+        MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
+        // take user to next song
+        MiniPlayer.backward(position: position, songs: songs)
     }
     @objc func playBttnDidTap() {
-        if player.isPlaying {
-            // pause audio
-            player.pause()
-            // show play button
-            setPlayBttnImage()
-            // shrink image
-            UIView.animate(withDuration: 0.6,
-                animations: {
-                    self.coverImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-                },
-                completion: nil)
-        } else {
-            // play audio
-            player.play()
-            // show pause button
-            setPlayBttnImage()
-            // increase image size
-            UIView.animate(withDuration: 0.6,
-                animations: {
-                    self.coverImageView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                },
-                completion: { _ in
-                    UIView.animate(withDuration: 0.3) {
-                        self.coverImageView.transform = CGAffineTransform.identity
-                    }
-                })
-        }
+        let MiniPlayer = MiniPlayer.shared
+        
+        MiniPlayer.playOrPause()
+        // show play/pause button
+        MiniPlayer.setPlayBttnImage(playBttn)
+        // shrink image and send back to normal
+        MiniPlayer.setImageAnimation(coverImageView)
     }
     @objc func forwardBttnDidTap() {
+        let MiniPlayer = MiniPlayer.shared
+        let songs = MiniPlayer.array()
+        var position = MiniPlayer.position()
+        
+        // change the position of song in an array
         if position < (songs.count - 1) {
             position = position + 1
-            player.pause()
         }
-        configure()
-    }
-    
-    func setPlayBttnImage() {
-        switch SongService.shared.checkStatus() {
-        case .isPausedd:
-            self.playBttn.setImage(UIImage(named: "play-icon"), for: .normal)
-            break
-        case .isPlayingg:
-            self.playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
-            break
-        }
+        // update current playing value after change the position
+        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        
+        let song = songs[position]
+        // configure option's menu button when song changes
+        configureOptionsBttn(forSong: song)
+        // update changes in UI of miniPlayer
+        MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
+        // take user to next song
+        MiniPlayer.forward(position: position, songs: songs)
     }
 }
+

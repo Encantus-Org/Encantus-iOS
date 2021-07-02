@@ -16,38 +16,3 @@ struct Song: Equatable {
     var urlString: String
     var coverUrlString: String
 }
-
-enum SongStatus {
-    case isPlayingg
-    case isPausedd
-}
-
-class SongService {
-    static let shared = SongService()
-    
-    func checkStatus() -> SongStatus {
-        if player.isPlaying {
-            return .isPlayingg
-        } else {
-            return .isPausedd
-        }
-    }
-    
-    func sortBy(genres: String, arrayToSort: [Song]) -> [Song] {
-        var sorted = [Song]()
-        for song in arrayToSort {
-            if song.genres == genres{
-                sorted.append(song)
-            }
-        }
-        return sorted
-    }
-    
-    func checkIfAleradyPlaying() -> SongStatus {
-        if currentPlaying == nil {
-            return .isPausedd
-        }else {
-            return .isPlayingg
-        }
-    }
-}

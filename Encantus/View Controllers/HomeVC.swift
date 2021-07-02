@@ -8,6 +8,8 @@
 import UIKit
 import Combine
 import Kingfisher
+import MediaPlayer
+import AVFoundation
 
 class CategoryCell: UICollectionViewCell {
     @IBOutlet weak var textLabel: UILabel!
@@ -60,18 +62,21 @@ class HomeVC: UITableViewController {
         currentSongCoverImageView.clipsToBounds = true
         currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
         miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(taped(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(miniPlayerDidTap(_:)))
         miniPlayerView.addGestureRecognizer(tapGesture)
         miniPlayerView.isUserInteractionEnabled  = true
+        miniPlayerView.layer.cornerRadius = 15
+        miniPlayerView.layer.masksToBounds = true
+        miniPlayerView.clipsToBounds = true
         view.addSubview(miniPlayerView)
         // set the theme to always dark
         UIApplication.shared.windows.forEach { window in
             window.overrideUserInterfaceStyle = .dark
         }
     }
-    @objc func taped(_ sender: UITapGestureRecognizer) {
+    @objc func miniPlayerDidTap(_ sender: UITapGestureRecognizer) {
         if SongService.shared.checkStatus() == .isPlayingg {
-            print("Present vc")
+            print("Player Preseted using miniPlayer")
             guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
             vc.modalPresentationStyle = .popover
             
@@ -131,30 +136,8 @@ extension HomeVC {
                 self!.songs = value
                 self!.sortedSongs = value
                 self!.songCollectionView.reloadData()
-//                self!.loadImages()
             }).store(in: &observers)
         
-    }
-    
-    func loadImages() {
-        // load image
-        var urls = [String]()
-        for song in sortedSongs {
-            urls.append(song.coverUrlString)
-        }
-        DataService.shared.getCoverWith(urls: urls )
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error)
-                    break
-                }
-            }, receiveValue: { [weak self] value in
-                print("values: \(value)")
-            }).store(in: &observers)
     }
 }
 
@@ -231,6 +214,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.isSelected = true
             }
         } else {
+            let MiniPlayer = MiniPlayer.shared
             let buttonTag = indexPath.row
             
             guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
@@ -243,17 +227,21 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 sheet.preferredCornerRadius = 30
             }
             
-            vc.songs = sortedSongs
-            vc.position = buttonTag
+            MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: buttonTag)
             
             self.present(vc, animated: true)
             
-            print(sortedSongs[buttonTag].name)
+            // check if any song is already playing in player, if so then remover the player and initiater a new one
+            if SongService.shared.checkStatus() == .isPlayingg {
+                MiniPlayer.player.pause()
+                MiniPlayer.player = nil
+            }
             configureMiniPlayer(songs: sortedSongs, position: buttonTag)
         }
     }
     
     @objc func playBttnDidTap(sender: UIButton) {
+        let MiniPlayer = MiniPlayer.shared
         let buttonTag = sender.tag
         
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
@@ -266,12 +254,15 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             sheet.preferredCornerRadius = 30
         }
         
-        vc.songs = sortedSongs
-        vc.position = buttonTag
+        MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: buttonTag)
         
         self.present(vc, animated: true)
         
-        print(sortedSongs[buttonTag].name)
+        // check if any song is already playing in player, if so then remover the player and initiater a new one
+        if SongService.shared.checkStatus() == .isPlayingg {
+            MiniPlayer.player.pause()
+            MiniPlayer.player = nil
+        }
         configureMiniPlayer(songs: sortedSongs, position: buttonTag)
     }
 }
@@ -279,40 +270,57 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
 // MiniPlayer
 extension HomeVC {
     func configureMiniPlayer(songs: [Song], position: Int) {
+        let MiniPlayer = MiniPlayer.shared
         let song = songs[position]
-        currentSongNameLabel.text = song.name
-        currentSongCoverImageView.kf.setImage(with: URL(string: song.coverUrlString), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        currentSongArtistNameLabel.text = song.artist[0]
+        MiniPlayer.configMiniPlayerUI(song: song, currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
         backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
         forwardBttn.addTarget(self, action: #selector(forwardBttnDidTap), for: .touchUpInside)
         playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
+        // set current playing song's info
+        currentPlayingInfo = CurrentPlaying(array: songs, position: position)
+        // configure player finally
+        MiniPlayer.configure(song: song)
     }
     @objc func backwardBttnDidTap() {
-//        if position>0 {
-//            position = position - 1
-//            player.pause()
-//        }
-//        configure()
+        let MiniPlayer = MiniPlayer.shared
+        let songs = MiniPlayer.array()
+        var position = MiniPlayer.position()
+        
+        // change the position of song in an array
+        if position>0 {
+            position = position - 1
+        }
+        // update current playing value after change the position
+        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        // update changes in UI of miniPlayer
+        MiniPlayer.configMiniPlayerUI(song: songs[position], currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        // take user to previous song
+        MiniPlayer.backward(position: position, songs: songs)
     }
     @objc func playBttnDidTapp() {
-        if player.isPlaying {
-            // pause audio
-            player!.pause()
-            // show play button
-            self.playBttn.setImage(UIImage(named: "play-icon"), for: .normal)
-        } else {
-            // play audio
-            player.play()
-            // show pause button
-            self.playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
-        }
+        let MiniPlayer = MiniPlayer.shared
+        
+        MiniPlayer.playOrPause()
+        // show play/pause button
+        MiniPlayer.setPlayBttnImage(playBttn)
     }
     @objc func forwardBttnDidTap() {
-//        if position < (songs.count - 1) {
-//            position = position + 1
-//            player.pause()
-//        }
-//        configure()
+        let MiniPlayer = MiniPlayer.shared
+        let songs = MiniPlayer.array()
+        var position = MiniPlayer.position()
+        
+        // change the position of song in an array
+        if position < (songs.count - 1) {
+            position = position + 1
+        }
+        // update current playing value after change the position
+        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        
+        // update changes in UI of miniPlayer
+        MiniPlayer.configMiniPlayerUI(song: songs[position], currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        // take user to next song
+        MiniPlayer.forward(position: position, songs: songs)
     }
 }

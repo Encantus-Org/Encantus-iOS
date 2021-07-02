@@ -85,3 +85,33 @@ extension CMTime {
         }
     }
 }
+
+extension UIButton {
+    func play() {
+        self.setImage(UIImage(named: "play-icon"), for: .normal)
+    }
+    func pause() {
+        self.setImage(UIImage(named: "pause-icon"), for: .normal)
+    }
+}
+
+extension UIImageView {
+    func shrink(_ by: CGFloat) {
+        UIView.animate(withDuration: 0.6,
+            animations: {
+                self.transform = CGAffineTransform(scaleX: by, y: by)
+            },
+            completion: nil)
+    }
+    func toIdentity(_ by: CGFloat) {
+        UIView.animate(withDuration: 0.6,
+            animations: {
+                self.transform = CGAffineTransform(scaleX: by, y: by)
+            },
+            completion: { _ in
+                UIView.animate(withDuration: 0.3) {
+                    self.transform = CGAffineTransform.identity
+                }
+            })
+    }
+}

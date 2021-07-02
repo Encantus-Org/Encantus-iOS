@@ -130,38 +130,53 @@
                                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L40-Hn-Wn4">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="210" height="210"/>
                                                                             </imageView>
-                                                                            <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vda-SR-cYL">
-                                                                                <rect key="frame" x="24" y="151" width="163" height="43"/>
-                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vda-SR-cYL">
+                                                                                <rect key="frame" x="14" y="136" width="182" height="60"/>
                                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="WXC-Zc-cLs">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="163" height="43"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="182" height="60"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Song Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4yw-tC-Ce9">
-                                                                                            <rect key="frame" x="8" y="8" width="74" height="16"/>
-                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                                                                                            <nil key="textColor"/>
-                                                                                            <nil key="highlightedColor"/>
-                                                                                        </label>
-                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Artist Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zmf-mL-BCM">
-                                                                                            <rect key="frame" x="8" y="24" width="47" height="10"/>
-                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                            <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                                                                                            <nil key="textColor"/>
-                                                                                            <nil key="highlightedColor"/>
-                                                                                        </label>
-                                                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBU-Nd-DbS">
-                                                                                            <rect key="frame" x="130" y="9" width="25" height="25"/>
-                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBU-Nd-DbS">
+                                                                                            <rect key="frame" x="135" y="13" width="34" height="34"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="width" constant="34" id="BTa-sl-1Bd"/>
+                                                                                                <constraint firstAttribute="height" constant="34" id="Wl1-mQ-0sF"/>
+                                                                                            </constraints>
                                                                                             <color key="tintColor" name="purpleColor"/>
                                                                                             <state key="normal" title="Button"/>
-                                                                                            <buttonConfiguration key="configuration" style="filled" cornerStyle="capsule">
+                                                                                            <buttonConfiguration key="configuration" style="filled" title="" cornerStyle="capsule">
                                                                                                 <imageReference key="image" image="play.fill" catalog="system"/>
                                                                                                 <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage" scale="small"/>
                                                                                             </buttonConfiguration>
                                                                                         </button>
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4yw-tC-Ce9">
+                                                                                            <rect key="frame" x="13" y="14" width="84" height="18"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="height" constant="18" id="dCF-V9-fPA"/>
+                                                                                            </constraints>
+                                                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                                                            <nil key="textColor"/>
+                                                                                            <nil key="highlightedColor"/>
+                                                                                        </label>
+                                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zmf-mL-BCM">
+                                                                                            <rect key="frame" x="13" y="34" width="58" height="12"/>
+                                                                                            <constraints>
+                                                                                                <constraint firstAttribute="height" constant="12" id="yjj-nw-Vbi"/>
+                                                                                            </constraints>
+                                                                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                                                                            <nil key="textColor"/>
+                                                                                            <nil key="highlightedColor"/>
+                                                                                        </label>
                                                                                     </subviews>
+                                                                                    <constraints>
+                                                                                        <constraint firstItem="Zmf-mL-BCM" firstAttribute="leading" secondItem="WXC-Zc-cLs" secondAttribute="leading" constant="13" id="FrO-oA-ecC"/>
+                                                                                        <constraint firstAttribute="bottom" secondItem="YBU-Nd-DbS" secondAttribute="bottom" constant="13" id="HfJ-1H-a2c"/>
+                                                                                        <constraint firstItem="4yw-tC-Ce9" firstAttribute="top" secondItem="WXC-Zc-cLs" secondAttribute="top" constant="14" id="KdD-W0-Xqv"/>
+                                                                                        <constraint firstAttribute="bottom" secondItem="Zmf-mL-BCM" secondAttribute="bottom" constant="14" id="PR6-dy-s9R"/>
+                                                                                        <constraint firstAttribute="trailing" secondItem="YBU-Nd-DbS" secondAttribute="trailing" constant="13" id="ZAw-z7-4Ve"/>
+                                                                                        <constraint firstItem="4yw-tC-Ce9" firstAttribute="leading" secondItem="WXC-Zc-cLs" secondAttribute="leading" constant="13" id="hu9-Zi-xrx"/>
+                                                                                        <constraint firstItem="YBU-Nd-DbS" firstAttribute="top" secondItem="WXC-Zc-cLs" secondAttribute="top" constant="13" id="yfr-I0-szY"/>
+                                                                                    </constraints>
                                                                                 </view>
                                                                                 <blurEffect style="regular"/>
                                                                             </visualEffectView>
@@ -171,7 +186,11 @@
                                                                             <constraint firstAttribute="trailing" secondItem="L40-Hn-Wn4" secondAttribute="trailing" id="E7o-pz-jle"/>
                                                                             <constraint firstAttribute="bottom" secondItem="L40-Hn-Wn4" secondAttribute="bottom" id="ESn-Rs-vR7"/>
                                                                             <constraint firstItem="L40-Hn-Wn4" firstAttribute="top" secondItem="YbN-fY-Lvr" secondAttribute="top" id="KvF-FP-3H0"/>
+                                                                            <constraint firstItem="vda-SR-cYL" firstAttribute="top" secondItem="YbN-fY-Lvr" secondAttribute="top" constant="136" id="jdv-j2-AHz"/>
+                                                                            <constraint firstItem="vda-SR-cYL" firstAttribute="leading" secondItem="YbN-fY-Lvr" secondAttribute="leading" constant="14" id="mMX-ku-qh7"/>
                                                                             <constraint firstItem="L40-Hn-Wn4" firstAttribute="leading" secondItem="YbN-fY-Lvr" secondAttribute="leading" id="n1N-5p-PAH"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="vda-SR-cYL" secondAttribute="bottom" constant="14" id="nkq-og-tNW"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="vda-SR-cYL" secondAttribute="trailing" constant="14" id="p55-CS-0ig"/>
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
@@ -344,7 +363,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="446"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WOz-wv-RLx">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="WOz-wv-RLx">
                                                     <rect key="frame" x="35" y="42" width="344" height="362"/>
                                                 </imageView>
                                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBM-8v-X8m">
@@ -357,6 +376,7 @@
                                                 </visualEffectView>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fOJ-GO-gZg">
                                                     <rect key="frame" x="35" y="42" width="344" height="362"/>
+                                                    <imageReference key="image" image="placeholder"/>
                                                 </imageView>
                                             </subviews>
                                             <constraints>
@@ -382,8 +402,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="94"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Song-Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lhU-7d-3cD">
-                                                    <rect key="frame" x="35" y="15" width="124" height="25"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lhU-7d-3cD">
+                                                    <rect key="frame" x="35" y="15" width="101" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="25" id="c28-th-bwb"/>
                                                     </constraints>
@@ -391,8 +411,8 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Artist-Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFr-Hc-U0n">
-                                                    <rect key="frame" x="35" y="47" width="94" height="18"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CFr-Hc-U0n">
+                                                    <rect key="frame" x="35" y="47" width="74.5" height="18"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="18" id="92F-nQ-Ll2"/>
                                                     </constraints>
@@ -444,7 +464,7 @@
                                                     <color key="textColor" systemColor="systemGray3Color"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.40000000000000002" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="j0N-Qj-Us5">
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="j0N-Qj-Us5">
                                                     <rect key="frame" x="34" y="0.0" width="346" height="31"/>
                                                     <color key="tintColor" name="purpleColor"/>
                                                     <constraints>
