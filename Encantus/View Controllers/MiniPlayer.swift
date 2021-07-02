@@ -23,8 +23,10 @@ class MiniPlayer {
     func configure(song: Song) {
         // get song data
         let name = song.name
-        let artist = song.artist[0]
-        let album = song.album
+        let artistId = song.artistId[0]
+        let artist = ArtistService.shared.getArtist(byId: artistId).name
+        let albumId = song.albumId
+        let album = ArtistService.shared.getAlbum(byId: albumId).name
         let genre = song.genres
         let urlString = song.urlString
         let cover = UIImage(named: "encantus-logo")
@@ -53,6 +55,11 @@ class MiniPlayer {
             
             // play the somg
             player.play()
+            
+            // to set play icon in playbttn in HomeVC when a song is forwarded when paused from PlayerVC
+            if self.playBttnInHome != nil {
+                setPlayBttnImage(self.playBttnInHome!)
+            }
             
             // Define Now Playing Info
             nowPlayingInfo[MPMediaItemPropertyTitle] = name
@@ -180,7 +187,8 @@ class MiniPlayer {
     func configMiniPlayerUI(song: Song) {
         let coverUrl = song.coverUrlString
         let name = song.name
-        let artist = song.artist[0]
+        let artistId = song.artistId[0]
+        let artist = ArtistService.shared.getArtist(byId: artistId).name
         
         currentSongCoverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         currentSongNameLabel!.text = name
@@ -204,7 +212,8 @@ class MiniPlayer {
         // get song data
         let coverUrl = song.coverUrlString
         let name = song.name
-        let artist = song.artist[0]
+        let artistId = song.artistId[0]
+        let artist = ArtistService.shared.getArtist(byId: artistId).name
         
         // schedule timer
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(changeSliderValueWithTimer), userInfo: nil, repeats: true)
@@ -269,7 +278,7 @@ class MiniPlayer {
     // Current Playing list
     func array() -> [Song]{
         let array = currentPlayingInfo?.array
-        guard array != nil else { return [Song(name: "NaN", album: "NaN", artist: ["NaN"], genres: "", urlString: "", coverUrlString: "")]}
+        guard array != nil else { return [Song(uid: "Nan", name: "NaN", albumId: "NaN", artistId: ["NaN"], genres: "", urlString: "Nan", coverUrlString: "NaN")]}
         return array!
     }
     func position() -> Int{

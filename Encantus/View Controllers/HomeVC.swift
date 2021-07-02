@@ -59,7 +59,6 @@ class HomeVC: UITableViewController {
         
         // design
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
-//        currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
         miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(miniPlayerDidTap(_:)))
         miniPlayerView.addGestureRecognizer(tapGesture)
@@ -137,7 +136,6 @@ extension HomeVC {
                 self!.sortedSongs = value
                 self!.songCollectionView.reloadData()
             }).store(in: &observers)
-        
     }
 }
 
@@ -170,7 +168,8 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             // get data
             let song = sortedSongs[indexPath.row]
             let name = song.name
-            let artist = song.artist[0]
+            let artistId = song.artistId[0]
+            let artist = ArtistService.shared.getArtist(byId: artistId).name
             let coverUrl = song.coverUrlString
             
             // update UI

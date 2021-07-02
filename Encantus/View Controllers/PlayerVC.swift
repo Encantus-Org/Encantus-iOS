@@ -148,7 +148,8 @@ extension PlayerVC {
     func configureOptionsBttn(forSong: Song) {
         let song = forSong
         // get song data
-        let artist = song.artist[0]
+        let artistId = song.artistId[0]
+        let artist = ArtistService.shared.getArtist(byId: artistId).name
         let urlString = song.urlString
         let cover = UIImage(named: "encantus-logo")
         
@@ -168,7 +169,9 @@ extension PlayerVC {
             clipBoard.string = urlString
             },
             UIAction(title: "Go to artist",image: UIImage(systemName: "music.mic")) { _ in
-
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "ArtistProfileVC") as! ArtistProfileVC
+            vc.artistId = artistId
+            self.present(vc, animated: true)
             },
             UIAction(title: "Go to album",image: UIImage(systemName: "square.stack")) { _ in
 

@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */; };
+		412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E3268F79AF00CC5591 /* ArtistProfileVC.swift */; };
+		412917E7268F7A4700CC5591 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E6268F7A4700CC5591 /* Artist.swift */; };
+		412917EA268F80E600CC5591 /* AttributedFontExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E9268F80E600CC5591 /* AttributedFontExtention.swift */; };
+		412917EC268F923E00CC5591 /* ArtistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917EB268F923E00CC5591 /* ArtistService.swift */; };
 		4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */; };
 		4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141876D268E1CF400745DA6 /* MiniPlayer.swift */; };
 		41418772268E773400745DA6 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418771268E773400745DA6 /* SongService.swift */; };
@@ -28,6 +32,10 @@
 
 /* Begin PBXFileReference section */
 		28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.release.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.release.xcconfig"; sourceTree = "<group>"; };
+		412917E3268F79AF00CC5591 /* ArtistProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfileVC.swift; sourceTree = "<group>"; };
+		412917E6268F7A4700CC5591 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		412917E9268F80E600CC5591 /* AttributedFontExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedFontExtention.swift; sourceTree = "<group>"; };
+		412917EB268F923E00CC5591 /* ArtistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistService.swift; sourceTree = "<group>"; };
 		4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+extensions.swift"; sourceTree = "<group>"; };
 		4141876D268E1CF400745DA6 /* MiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayer.swift; sourceTree = "<group>"; };
 		41418771268E773400745DA6 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
@@ -79,6 +87,41 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		412917E1268F798600CC5591 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				412917E2268F799400CC5591 /* Service */,
+				4156DC80268B881C00D83BA6 /* PlayerVC.swift */,
+			);
+			name = Player;
+			sourceTree = "<group>";
+		};
+		412917E2268F799400CC5591 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				4141876D268E1CF400745DA6 /* MiniPlayer.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
+		412917E5268F7A3100CC5591 /* ArtistProfile */ = {
+			isa = PBXGroup;
+			children = (
+				412917E8268F7A4B00CC5591 /* Service */,
+				412917E3268F79AF00CC5591 /* ArtistProfileVC.swift */,
+			);
+			name = ArtistProfile;
+			sourceTree = "<group>";
+		};
+		412917E8268F7A4B00CC5591 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				412917EB268F923E00CC5591 /* ArtistService.swift */,
+				412917E6268F7A4700CC5591 /* Artist.swift */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
 		4135D85F268B6B9200A36CF5 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -86,6 +129,7 @@
 				41CBDDD8268B6829003C4966 /* SceneDelegate.swift */,
 				4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */,
 				41CF29E3268CD33400B3E71A /* CheatSheet.swift */,
+				412917E9268F80E600CC5591 /* AttributedFontExtention.swift */,
 				4156DC84268B9D8E00D83BA6 /* GradientButton.swift */,
 				4156DC7C268B7C3D00D83BA6 /* DataService.swift */,
 				41CBDDE7268B6829003C4966 /* Info.plist */,
@@ -107,6 +151,8 @@
 			isa = PBXGroup;
 			children = (
 				4156DC7A268B7B8E00D83BA6 /* Home */,
+				412917E1268F798600CC5591 /* Player */,
+				412917E5268F7A3100CC5591 /* ArtistProfile */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -117,7 +163,6 @@
 				41418771268E773400745DA6 /* SongService.swift */,
 				4156DC77268B7B7D00D83BA6 /* Song.swift */,
 				41418773268E77BE00745DA6 /* CurrentPlaying.swift */,
-				4141876D268E1CF400745DA6 /* MiniPlayer.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -127,7 +172,6 @@
 			children = (
 				4156DC79268B7B8700D83BA6 /* Services */,
 				41CBDDDA268B6829003C4966 /* HomeVC.swift */,
-				4156DC80268B881C00D83BA6 /* PlayerVC.swift */,
 			);
 			name = Home;
 			sourceTree = "<group>";
@@ -276,9 +320,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				412917EC268F923E00CC5591 /* ArtistService.swift in Sources */,
 				4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */,
 				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
+				412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */,
+				412917E7268F7A4700CC5591 /* Artist.swift in Sources */,
 				41CF29E4268CD33400B3E71A /* CheatSheet.swift in Sources */,
+				412917EA268F80E600CC5591 /* AttributedFontExtention.swift in Sources */,
 				4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */,
 				41CBDDDB268B6829003C4966 /* HomeVC.swift in Sources */,
 				4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */,

@@ -5,13 +5,13 @@
 //  Created by Ankit Yadav on 29/06/21.
 //
 
-import UIKit
 import Foundation
 
 struct Song: Equatable {
+    var uid: String
     var name: String
-    var album: String
-    var artist: [String]
+    var albumId: String
+    var artistId: [String]
     var genres: String
     var urlString: String
     var coverUrlString: String
