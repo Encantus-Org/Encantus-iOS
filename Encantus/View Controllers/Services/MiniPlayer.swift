@@ -113,12 +113,21 @@ class MiniPlayer {
             break
         }
     }
+    // poster from PlayerVC
+    var imageViewToAnimate = UIImageView()
+    
     func forward(position: Int, songs: [Song]) {
         player.pause()
+        if imageViewToAnimate.image != nil {
+            imageViewToAnimate.toIdentity(1.05)
+        }
         configure(song: songs[position])
     }
     func backward(position: Int, songs: [Song]) {
         player.pause()
+        if imageViewToAnimate.image != nil {
+            imageViewToAnimate.toIdentity(1.05)
+        }
         configure(song: songs[position])
     }
     func setPlayBttnImage(_ playBttn: UIButton) {
@@ -135,15 +144,19 @@ class MiniPlayer {
     }
     
 //MARK: 👇🏻Functions specific to HomeVC only
+    var currentSongCoverImageView:UIImageView?
+    var currentSongNameLabel: UILabel?
+    var currentSongArtistNameLabel: UILabel?
+    
     // update chnages in MiniPlayer's UI located in HomeVC
-    func configMiniPlayerUI(song: Song, currentSongCoverImageView: UIImageView, currentSongNameLabel: UILabel, currentSongArtistNameLabel: UILabel) {
+    func configMiniPlayerUI(song: Song) {
         let coverUrl = song.coverUrlString
         let name = song.name
         let artist = song.artist[0]
         
-        currentSongCoverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        currentSongNameLabel.text = name
-        currentSongArtistNameLabel.text = artist
+        currentSongCoverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        currentSongNameLabel!.text = name
+        currentSongArtistNameLabel!.text = artist
     }
     
 //MARK: 👇🏻Functions specific to PlayerVC only
@@ -190,7 +203,9 @@ class MiniPlayer {
     // change values of slider and labe with timer
     @objc func changeSliderValueWithTimer() {
         currentTimeLabel!.text = player.currentTime().minutes
-        songProgressSlider!.value = Float(CMTimeGetSeconds(player.currentTime()))
+        UIView.animate(withDuration: 0.1, animations: {
+            self.songProgressSlider!.setValue(Float(CMTimeGetSeconds(self.player.currentTime())), animated:true)
+        })
     }
     
     // change value of audio's poition by dragging

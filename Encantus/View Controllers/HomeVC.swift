@@ -28,7 +28,7 @@ class SongsCell: UICollectionViewCell {
 }
 
 class HomeVC: UITableViewController {
-
+    
     var observers: [AnyCancellable] = []
     private var categories = [String]()
     private var songs = [Song]()
@@ -55,12 +55,11 @@ class HomeVC: UITableViewController {
         super.viewDidLoad()
         
         fetchData()
+        assignValuesInMiniPlayer()
         
         // design
-        currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/12
-        currentSongCoverImageView.layer.masksToBounds = true
-        currentSongCoverImageView.clipsToBounds = true
-        currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
+        currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
+//        currentSongCoverImageView.dropShadow(color: .black, opacity: 0.1 , offSet: CGSize(width: 0.4, height: 0.4),radius: 10)
         miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(miniPlayerDidTap(_:)))
         miniPlayerView.addGestureRecognizer(tapGesture)
@@ -74,6 +73,13 @@ class HomeVC: UITableViewController {
             window.overrideUserInterfaceStyle = .dark
         }
     }
+    func assignValuesInMiniPlayer() {
+        let MiniPlayer = MiniPlayer.shared
+        MiniPlayer.currentSongNameLabel = self.currentSongNameLabel
+        MiniPlayer.currentSongArtistNameLabel = self.currentSongArtistNameLabel
+        MiniPlayer.currentSongCoverImageView = self.currentSongCoverImageView
+    }
+    
     @objc func miniPlayerDidTap(_ sender: UITapGestureRecognizer) {
         if SongService.shared.checkStatus() == .isPlayingg {
             print("Player Preseted using miniPlayer")
@@ -272,7 +278,7 @@ extension HomeVC {
     func configureMiniPlayer(songs: [Song], position: Int) {
         let MiniPlayer = MiniPlayer.shared
         let song = songs[position]
-        MiniPlayer.configMiniPlayerUI(song: song, currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        MiniPlayer.configMiniPlayerUI(song: song)
         // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
         backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
@@ -295,7 +301,7 @@ extension HomeVC {
         // update current playing value after change the position
         MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
         // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position], currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        MiniPlayer.configMiniPlayerUI(song: songs[position])
         // take user to previous song
         MiniPlayer.backward(position: position, songs: songs)
     }
@@ -319,7 +325,7 @@ extension HomeVC {
         MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
         
         // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position], currentSongCoverImageView: self.currentSongCoverImageView, currentSongNameLabel: self.currentSongNameLabel, currentSongArtistNameLabel: self.currentSongArtistNameLabel)
+        MiniPlayer.configMiniPlayerUI(song: songs[position])
         // take user to next song
         MiniPlayer.forward(position: position, songs: songs)
     }

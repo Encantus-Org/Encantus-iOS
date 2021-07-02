@@ -179,6 +179,8 @@ extension PlayerVC {
         let songs = MiniPlayer.array()
         var position = MiniPlayer.position()
         
+        // set value of image View in Player to animate the cover while changing song
+        MiniPlayer.imageViewToAnimate = coverImageView
         // change the position of song in an array
         if position>0 {
             position = position - 1
@@ -190,6 +192,8 @@ extension PlayerVC {
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
         // update changes in UI of miniPlayer
+        MiniPlayer.configMiniPlayerUI(song: songs[position])
+        // update changes in UI of Player
         MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
         // take user to next song
         MiniPlayer.backward(position: position, songs: songs)
@@ -208,6 +212,8 @@ extension PlayerVC {
         let songs = MiniPlayer.array()
         var position = MiniPlayer.position()
         
+        // set value of image View in Player to animate the cover while changing song
+        MiniPlayer.imageViewToAnimate = coverImageView
         // change the position of song in an array
         if position < (songs.count - 1) {
             position = position + 1
@@ -219,6 +225,8 @@ extension PlayerVC {
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
         // update changes in UI of miniPlayer
+        MiniPlayer.configMiniPlayerUI(song: songs[position])
+        // update changes in UI of Player
         MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
         // take user to next song
         MiniPlayer.forward(position: position, songs: songs)
