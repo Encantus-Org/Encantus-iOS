@@ -17,10 +17,6 @@ class MiniPlayer {
     
     static let shared = MiniPlayer()
     
-    // properties reffered from `PlayerVC`
-    var timer: Timer!
-    var currentTimeLabel: UILabel?
-    var songProgressSlider: UISlider?
     
 //MARK: 👇🏻Functions specific to both PlayerVC & HomeVC
     // configure a song, basically play it from starting
@@ -113,20 +109,49 @@ class MiniPlayer {
             break
         }
     }
-    // poster from PlayerVC
-    var imageViewToAnimate = UIImageView()
     
+    @objc func forwardBttnDidTap() {
+        let songs = array()
+        var position = position()
+        
+        // change the position of song in an array
+        if position < (songs.count - 1) {
+            position = position + 1
+        }
+        // update current playing value after change the position
+        updateCurrentPlaying(songs: songs, position: position)
+        // update changes in UI of miniPlayer
+        configMiniPlayerUI(song: songs[position])
+        // take user to next song
+        forward(position: position, songs: songs)
+    }
     func forward(position: Int, songs: [Song]) {
         player.pause()
-        if imageViewToAnimate.image != nil {
-            imageViewToAnimate.toIdentity(1.05)
+        if coverImageView!.image != nil {
+            coverImageView!.toIdentity(1.05)
         }
         configure(song: songs[position])
     }
+    @objc func backwardBttnDidTap() {
+        let MiniPlayer = MiniPlayer.shared
+        let songs = MiniPlayer.array()
+        var position = MiniPlayer.position()
+        
+        // change the position of song in an array
+        if position>0 {
+            position = position - 1
+        }
+        // update current playing value after change the position
+        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        // update changes in UI of miniPlayer
+        MiniPlayer.configMiniPlayerUI(song: songs[position])
+        // take user to previous song
+        MiniPlayer.backward(position: position, songs: songs)
+    }
     func backward(position: Int, songs: [Song]) {
         player.pause()
-        if imageViewToAnimate.image != nil {
-            imageViewToAnimate.toIdentity(1.05)
+        if coverImageView!.image != nil {
+            coverImageView!.toIdentity(1.05)
         }
         configure(song: songs[position])
     }
@@ -143,10 +168,11 @@ class MiniPlayer {
         }
     }
     
-//MARK: 👇🏻Functions specific to HomeVC only
+//MARK: 👇🏻Functions and values specific to HomeVC only
     var currentSongCoverImageView:UIImageView?
     var currentSongNameLabel: UILabel?
     var currentSongArtistNameLabel: UILabel?
+    var playBttnInHome: UIButton?
     
     // update chnages in MiniPlayer's UI located in HomeVC
     func configMiniPlayerUI(song: Song) {
@@ -159,9 +185,20 @@ class MiniPlayer {
         currentSongArtistNameLabel!.text = artist
     }
     
-//MARK: 👇🏻Functions specific to PlayerVC only
+//MARK: 👇🏻Functions and values specific to PlayerVC only
+    // properties reffered from `PlayerVC`
+    var timer: Timer!
+    var currentTimeLabel: UILabel?
+    var completeSongLengthLabel: UILabel?
+    var songProgressSlider: UISlider?
+    var playBttn: UIButton?
+    var coverImageView: UIImageView?
+    var coverImageView2: UIImageView?
+    var songNameLabel: UILabel?
+    var artistNameLabel: UILabel?
+    
     // update chnages in Player's UI located in PlayerVC
-    func configPlayerUI(song: Song, playBttn: UIButton,coverImageView: UIImageView, coverImageView2: UIImageView, songNameLabel: UILabel, artistNameLabel: UILabel, songProgressSlider: UISlider, completeSongLengthLabel: UILabel, currentTimeLabel: UILabel){
+    func configPlayerUI(song: Song){
         // get song data
         let coverUrl = song.coverUrlString
         let name = song.name
@@ -169,21 +206,21 @@ class MiniPlayer {
         
         // schedule timer
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(changeSliderValueWithTimer), userInfo: nil, repeats: true)
-        setPlayBttnImage(playBttn)
+        setPlayBttnImage(playBttn!)
         
         // update UI
-        coverImageView.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        coverImageView2.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        songNameLabel.text = name
-        artistNameLabel.text = artist
+        coverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        coverImageView2!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        songNameLabel!.text = name
+        artistNameLabel!.text = artist
         
         // song progress slider
-        songProgressSlider.minimumValue = 0.0
+        songProgressSlider!.minimumValue = 0.0
         // get song's total duration
         let duration = MiniPlayer.shared.player!.currentItem?.asset.duration
         DispatchQueue.main.async {
-            completeSongLengthLabel.text = duration?.minutes
-            songProgressSlider.maximumValue = Float(CMTimeGetSeconds(duration!))
+            self.completeSongLengthLabel!.text = duration?.minutes
+            self.songProgressSlider!.maximumValue = Float(CMTimeGetSeconds(duration!))
         }
     }
     

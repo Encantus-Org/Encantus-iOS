@@ -49,6 +49,7 @@ class PlayerVC: UITableViewController {
         self.optionsBttn.changesSelectionAsPrimaryAction = false
     }
     override func viewWillAppear(_ animated: Bool) {
+        assignValuesToMiniPlayer()
         configure()
         if isComingFromMiniPlayer {
             let MiniPlayer = MiniPlayer.shared
@@ -128,7 +129,7 @@ extension PlayerVC {
             MiniPlayer.currentTimeLabel = self.currentTimeLabel
             MiniPlayer.songProgressSlider = self.songProgressSlider
             
-            MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
+            MiniPlayer.configPlayerUI(song: song)
         } else {
             let MiniPlayer = MiniPlayer.shared
             let songs = MiniPlayer.array()
@@ -140,7 +141,7 @@ extension PlayerVC {
                 MiniPlayer.currentTimeLabel = self.currentTimeLabel
                 MiniPlayer.songProgressSlider = self.songProgressSlider
                 
-                MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
+                MiniPlayer.configPlayerUI(song: song)
             }
         }
     }
@@ -176,27 +177,20 @@ extension PlayerVC {
     }
     @objc func backwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        let songs = MiniPlayer.array()
+        var songs = MiniPlayer.array()
         var position = MiniPlayer.position()
         
-        // set value of image View in Player to animate the cover while changing song
-        MiniPlayer.imageViewToAnimate = coverImageView
-        // change the position of song in an array
-        if position>0 {
-            position = position - 1
-        }
-        // update current playing value after change the position
-        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        MiniPlayer.backwardBttnDidTap()
+        
+        // now that posituin value is updated, we'll get it back
+        songs = MiniPlayer.array()
+        position = MiniPlayer.position()
         
         let song = songs[position]
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
-        // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position])
         // update changes in UI of Player
-        MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
-        // take user to next song
-        MiniPlayer.backward(position: position, songs: songs)
+        MiniPlayer.configPlayerUI(song: song)
     }
     @objc func playBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
@@ -204,32 +198,38 @@ extension PlayerVC {
         MiniPlayer.playOrPause()
         // show play/pause button
         MiniPlayer.setPlayBttnImage(playBttn)
+        // show play/pause for MiniPlayer button
+        MiniPlayer.setPlayBttnImage(MiniPlayer.playBttnInHome!)
         // shrink image and send back to normal
         MiniPlayer.setImageAnimation(coverImageView)
     }
     @objc func forwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        let songs = MiniPlayer.array()
+        var songs = MiniPlayer.array()
         var position = MiniPlayer.position()
         
-        // set value of image View in Player to animate the cover while changing song
-        MiniPlayer.imageViewToAnimate = coverImageView
-        // change the position of song in an array
-        if position < (songs.count - 1) {
-            position = position + 1
-        }
-        // update current playing value after change the position
-        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        MiniPlayer.forwardBttnDidTap()
+        
+        // now that posituin value is updated, we'll get it back
+        songs = MiniPlayer.array()
+        position = MiniPlayer.position()
         
         let song = songs[position]
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
-        // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position])
         // update changes in UI of Player
-        MiniPlayer.configPlayerUI(song: song, playBttn: self.playBttn, coverImageView: self.coverImageView, coverImageView2: self.coverImageView2, songNameLabel: self.songNameLabel, artistNameLabel: self.artistNameLabel, songProgressSlider: self.songProgressSlider, completeSongLengthLabel: self.completeSongLengthLabel, currentTimeLabel: self.currentTimeLabel)
-        // take user to next song
-        MiniPlayer.forward(position: position, songs: songs)
+        MiniPlayer.configPlayerUI(song: song)
+    }
+    // Assign these values to adjacent values in MiniPlayer and see the magic
+    func assignValuesToMiniPlayer() {
+        let MiniPlayer = MiniPlayer.shared
+        MiniPlayer.playBttn = self.playBttn
+        MiniPlayer.coverImageView = self.coverImageView
+        MiniPlayer.coverImageView2 = self.coverImageView2
+        MiniPlayer.songNameLabel = self.songNameLabel
+        MiniPlayer.artistNameLabel = self.artistNameLabel
+        MiniPlayer.songProgressSlider = self.songProgressSlider
+        MiniPlayer.completeSongLengthLabel = self.completeSongLengthLabel
     }
 }
 

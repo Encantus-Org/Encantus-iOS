@@ -55,7 +55,7 @@ class HomeVC: UITableViewController {
         super.viewDidLoad()
         
         fetchData()
-        assignValuesInMiniPlayer()
+        assignValuesToMiniPlayer()
         
         // design
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
@@ -72,12 +72,6 @@ class HomeVC: UITableViewController {
         UIApplication.shared.windows.forEach { window in
             window.overrideUserInterfaceStyle = .dark
         }
-    }
-    func assignValuesInMiniPlayer() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.currentSongNameLabel = self.currentSongNameLabel
-        MiniPlayer.currentSongArtistNameLabel = self.currentSongArtistNameLabel
-        MiniPlayer.currentSongCoverImageView = self.currentSongCoverImageView
     }
     
     @objc func miniPlayerDidTap(_ sender: UITapGestureRecognizer) {
@@ -281,29 +275,13 @@ extension HomeVC {
         MiniPlayer.configMiniPlayerUI(song: song)
         // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
-        backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
-        forwardBttn.addTarget(self, action: #selector(forwardBttnDidTap), for: .touchUpInside)
+        backwardBttn.addTarget(self, action: #selector(MiniPlayer.backwardBttnDidTap), for: .touchUpInside)
+        forwardBttn.addTarget(self, action: #selector(MiniPlayer.forwardBttnDidTap), for: .touchUpInside)
         playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
         // set current playing song's info
         currentPlayingInfo = CurrentPlaying(array: songs, position: position)
         // configure player finally
         MiniPlayer.configure(song: song)
-    }
-    @objc func backwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        let songs = MiniPlayer.array()
-        var position = MiniPlayer.position()
-        
-        // change the position of song in an array
-        if position>0 {
-            position = position - 1
-        }
-        // update current playing value after change the position
-        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
-        // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position])
-        // take user to previous song
-        MiniPlayer.backward(position: position, songs: songs)
     }
     @objc func playBttnDidTapp() {
         let MiniPlayer = MiniPlayer.shared
@@ -312,21 +290,12 @@ extension HomeVC {
         // show play/pause button
         MiniPlayer.setPlayBttnImage(playBttn)
     }
-    @objc func forwardBttnDidTap() {
+    // Assign these values to adjacent values in MiniPlayer and see the magic
+    func assignValuesToMiniPlayer() {
         let MiniPlayer = MiniPlayer.shared
-        let songs = MiniPlayer.array()
-        var position = MiniPlayer.position()
-        
-        // change the position of song in an array
-        if position < (songs.count - 1) {
-            position = position + 1
-        }
-        // update current playing value after change the position
-        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
-        
-        // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position])
-        // take user to next song
-        MiniPlayer.forward(position: position, songs: songs)
+        MiniPlayer.currentSongNameLabel = self.currentSongNameLabel
+        MiniPlayer.currentSongArtistNameLabel = self.currentSongArtistNameLabel
+        MiniPlayer.currentSongCoverImageView = self.currentSongCoverImageView
+        MiniPlayer.playBttnInHome = self.playBttn
     }
 }
