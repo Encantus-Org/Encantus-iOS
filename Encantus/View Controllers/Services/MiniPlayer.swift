@@ -29,8 +29,6 @@ class MiniPlayer {
         let urlString = song.urlString
         let cover = UIImage(named: "encantus-logo")
         
-//        currentPlaying = song
-        
         do {
             // to support media playing in background
             try AVAudioSession.sharedInstance().setMode(.default)
@@ -97,6 +95,7 @@ class MiniPlayer {
             print(error)
         }
     }
+    
     func playOrPause() {
         switch SongService.shared.checkIfPaused() {
         case .isPausedd:
@@ -125,6 +124,7 @@ class MiniPlayer {
         // take user to next song
         forward(position: position, songs: songs)
     }
+    
     func forward(position: Int, songs: [Song]) {
         player.pause()
         if coverImageView!.image != nil {
@@ -132,22 +132,23 @@ class MiniPlayer {
         }
         configure(song: songs[position])
     }
+    
     @objc func backwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        let songs = MiniPlayer.array()
-        var position = MiniPlayer.position()
+        let songs = array()
+        var position = position()
         
         // change the position of song in an array
         if position>0 {
             position = position - 1
         }
         // update current playing value after change the position
-        MiniPlayer.updateCurrentPlaying(songs: songs, position: position)
+        updateCurrentPlaying(songs: songs, position: position)
         // update changes in UI of miniPlayer
-        MiniPlayer.configMiniPlayerUI(song: songs[position])
+        configMiniPlayerUI(song: songs[position])
         // take user to previous song
-        MiniPlayer.backward(position: position, songs: songs)
+        backward(position: position, songs: songs)
     }
+    
     func backward(position: Int, songs: [Song]) {
         player.pause()
         if coverImageView!.image != nil {
@@ -155,6 +156,7 @@ class MiniPlayer {
         }
         configure(song: songs[position])
     }
+    
     func setPlayBttnImage(_ playBttn: UIButton) {
         switch SongService.shared.checkIfPaused() {
         case .isPausedd:

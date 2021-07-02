@@ -275,17 +275,24 @@ extension HomeVC {
         MiniPlayer.configMiniPlayerUI(song: song)
         // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
-        backwardBttn.addTarget(self, action: #selector(MiniPlayer.backwardBttnDidTap), for: .touchUpInside)
-        forwardBttn.addTarget(self, action: #selector(MiniPlayer.forwardBttnDidTap), for: .touchUpInside)
+        backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
+        forwardBttn.addTarget(self, action: #selector(forwardBttnDidTap), for: .touchUpInside)
         playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
         // set current playing song's info
         currentPlayingInfo = CurrentPlaying(array: songs, position: position)
         // configure player finally
         MiniPlayer.configure(song: song)
     }
+    @objc func forwardBttnDidTap() {
+        let MiniPlayer = MiniPlayer.shared
+        MiniPlayer.forwardBttnDidTap()
+    }
+    @objc func backwardBttnDidTap() {
+        let MiniPlayer = MiniPlayer.shared
+        MiniPlayer.backwardBttnDidTap()
+    }
     @objc func playBttnDidTapp() {
         let MiniPlayer = MiniPlayer.shared
-        
         MiniPlayer.playOrPause()
         // show play/pause button
         MiniPlayer.setPlayBttnImage(playBttn)
