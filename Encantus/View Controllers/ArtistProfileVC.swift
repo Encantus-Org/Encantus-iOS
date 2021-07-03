@@ -25,6 +25,12 @@ class SongsOnArtistProfileVcCell: UITableViewCell {
     @IBOutlet weak var playBttn: UIButton!
 }
 
+class AlbumsInArtistProfileVcCell: UITableViewCell {
+    @IBOutlet weak var coverImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var artistNameLabel: UILabel!
+}
+
 class ArtistProfileVC: UITableViewController {
 
     var artistId: String?
@@ -33,6 +39,8 @@ class ArtistProfileVC: UITableViewController {
     
     var allSongs = [Song]()
     var allAlbums = [Album]()
+    
+    var whichCell = "Tracks"
     
     @IBOutlet weak var verifiedImageView: UIImageView!
     @IBOutlet weak var artistUsernameLabel: UILabel!
@@ -149,26 +157,50 @@ class ArtistProfileVC: UITableViewController {
 // table view
 extension ArtistProfileVC {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allSongs.count
+        var count = 0
+        if whichCell == "Tracks" {
+            count = allSongs.count
+        }
+        else if whichCell == "Albums"{
+            count = allAlbums.count
+        }
+        return count
     }
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:SongsOnArtistProfileVcCell = tableView.dequeueReusableCell(withIdentifier: "SongsOnArtistProfileVcCell", for: indexPath) as! SongsOnArtistProfileVcCell
-        let song = allSongs[indexPath.row]
-        let name = song.name
-        let artistId = song.artistId[0]
-        let artist = ArtistService.shared.getArtist(byId: artistId).name
-        let cover = song.coverUrlString
-        
-        cell.coverImageView.kf.setImage(with: URL(string: cover), placeholder: UIImage(named: "Placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        cell.nameLabel.text = name
-        cell.artistNameLabel.text = artist
-        
-        cell.playBttn.tag = indexPath.row
-        cell.playBttn.addTarget(self, action: #selector(playBttnDidTap(sender:)), for: .touchUpInside)
-        
-        // design
-        cell.coverImageView.layer.cornerRadius = cell.coverImageView.layer.bounds.height/4
-        return cell
+        if whichCell == "Tracks" {
+            let cell:SongsOnArtistProfileVcCell = tableView.dequeueReusableCell(withIdentifier: "SongsOnArtistProfileVcCell", for: indexPath) as! SongsOnArtistProfileVcCell
+            let song = allSongs[indexPath.row]
+            let name = song.name
+            let artistId = song.artistId[0]
+            let artist = ArtistService.shared.getArtist(byId: artistId).name
+            let cover = song.coverUrlString
+            
+            cell.coverImageView.kf.setImage(with: URL(string: cover), placeholder: UIImage(named: "Placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+            cell.nameLabel.text = name
+            cell.artistNameLabel.text = artist
+            
+            cell.playBttn.tag = indexPath.row
+            cell.playBttn.addTarget(self, action: #selector(playBttnDidTap(sender:)), for: .touchUpInside)
+            
+            // design
+            cell.coverImageView.layer.cornerRadius = cell.coverImageView.layer.bounds.height/4
+            return cell
+        } else{
+            let cell:AlbumsInArtistProfileVcCell = tableView.dequeueReusableCell(withIdentifier: "AlbumsInArtistProfileVcCell", for: indexPath) as! AlbumsInArtistProfileVcCell
+            let album = allAlbums[indexPath.row]
+            let name = album.name
+            let artistId = album.artistId[0]
+            let artist = ArtistService.shared.getArtist(byId: artistId).name
+            let cover = album.albumCoverUrl
+            
+            cell.coverImageView.kf.setImage(with: URL(string: cover), placeholder: UIImage(named: "Placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+            cell.nameLabel.text = name
+            cell.artistNameLabel.text = artist
+            
+            // design
+            cell.coverImageView.layer.cornerRadius = cell.coverImageView.layer.bounds.height/4
+            return cell
+        }
     }
     @objc func playBttnDidTap(sender: UIButton) {
         self.dismiss(animated: true) {
@@ -199,6 +231,8 @@ extension ArtistProfileVC: UICollectionViewDelegate, UICollectionViewDataSource 
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let option = options[indexPath.row]
+        // set color of all options to white
         for section in 0..<self.optionsCollectionView.numberOfSections{
             for row in 0..<self.optionsCollectionView.numberOfItems(inSection: section){
                 let cell = self.optionsCollectionView.cellForItem(at: IndexPath(row: row, section: section)) as? optionSwitcherInProfileVC
@@ -209,8 +243,12 @@ extension ArtistProfileVC: UICollectionViewDelegate, UICollectionViewDataSource 
         if let cell = optionsCollectionView.cellForItem(at: indexPath) as? optionSwitcherInProfileVC {
             cell.isSelected = true
         }
+        whichCell = option
+        UIView.transition(with: tableView,
+                          duration: 0.35,
+                          options: .transitionCrossDissolve,
+                          animations: { self.tableView.reloadData() })
     }
-    
 }
 
 // Extra
