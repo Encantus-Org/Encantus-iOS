@@ -20,6 +20,8 @@
 		4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC7C268B7C3D00D83BA6 /* DataService.swift */; };
 		4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC80268B881C00D83BA6 /* PlayerVC.swift */; };
 		4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC84268B9D8E00D83BA6 /* GradientButton.swift */; };
+		41AAEA11269085AF0030E3E8 /* AlbumDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AAEA10269085AF0030E3E8 /* AlbumDetailVC.swift */; };
+		41AAEA13269090700030E3E8 /* StretchyHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41AAEA12269090700030E3E8 /* StretchyHeader.swift */; };
 		41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD6268B6829003C4966 /* AppDelegate.swift */; };
 		41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDD8268B6829003C4966 /* SceneDelegate.swift */; };
 		41CBDDDB268B6829003C4966 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41CBDDDA268B6829003C4966 /* HomeVC.swift */; };
@@ -44,6 +46,8 @@
 		4156DC7C268B7C3D00D83BA6 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4156DC80268B881C00D83BA6 /* PlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerVC.swift; sourceTree = "<group>"; };
 		4156DC84268B9D8E00D83BA6 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
+		41AAEA10269085AF0030E3E8 /* AlbumDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumDetailVC.swift; sourceTree = "<group>"; };
+		41AAEA12269090700030E3E8 /* StretchyHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StretchyHeader.swift; sourceTree = "<group>"; };
 		41CBDDD3268B6829003C4966 /* Encantus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Encantus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		41CBDDD6268B6829003C4966 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		41CBDDD8268B6829003C4966 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				41CBDDD8268B6829003C4966 /* SceneDelegate.swift */,
 				4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */,
 				41CF29E3268CD33400B3E71A /* CheatSheet.swift */,
+				41AAEA12269090700030E3E8 /* StretchyHeader.swift */,
 				412917E9268F80E600CC5591 /* AttributedFontExtention.swift */,
 				4156DC84268B9D8E00D83BA6 /* GradientButton.swift */,
 				4156DC7C268B7C3D00D83BA6 /* DataService.swift */,
@@ -153,6 +158,7 @@
 				4156DC7A268B7B8E00D83BA6 /* Home */,
 				412917E1268F798600CC5591 /* Player */,
 				412917E5268F7A3100CC5591 /* ArtistProfile */,
+				41AAEA10269085AF0030E3E8 /* AlbumDetailVC.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -324,6 +330,7 @@
 				4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */,
 				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
 				412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */,
+				41AAEA13269090700030E3E8 /* StretchyHeader.swift in Sources */,
 				412917E7268F7A4700CC5591 /* Artist.swift in Sources */,
 				41CF29E4268CD33400B3E71A /* CheatSheet.swift in Sources */,
 				412917EA268F80E600CC5591 /* AttributedFontExtention.swift in Sources */,
@@ -333,6 +340,7 @@
 				4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */,
 				41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */,
 				41418772268E773400745DA6 /* SongService.swift in Sources */,
+				41AAEA11269085AF0030E3E8 /* AlbumDetailVC.swift in Sources */,
 				41CBDDE1268B6829003C4966 /* Encantus.xcdatamodeld in Sources */,
 				4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */,
 				41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */,

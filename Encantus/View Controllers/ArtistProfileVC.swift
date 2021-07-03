@@ -150,7 +150,6 @@ class ArtistProfileVC: UITableViewController {
                 self?.allSongs = allSongs
                 self?.tableView.reloadData()
             }).store(in: &observers)
-        
     }
 }
 

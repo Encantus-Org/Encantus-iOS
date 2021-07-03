@@ -89,4 +89,14 @@ class ArtistService {
         }
         return mySongs
     }
+    func getAllSongs(byAlbumId: String, songs: [Song]) -> [Song] {
+        let album = getAlbum(byId: byAlbumId)
+        var mySongs = [Song]()
+        for song in songs {
+            if album.trackId.contains(song.uid){
+                mySongs.append(song)
+            }
+        }
+        return mySongs
+    }
 }

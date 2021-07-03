@@ -152,6 +152,7 @@ extension PlayerVC {
         let artist = ArtistService.shared.getArtist(byId: artistId).name
         let urlString = song.urlString
         let cover = UIImage(named: "encantus-logo")
+        let albumId = song.albumId
         
         // configure context menu for button
         self.optionsBttn.menu = UIMenu(children: [
@@ -174,7 +175,9 @@ extension PlayerVC {
             self.present(vc, animated: true)
             },
             UIAction(title: "Go to album",image: UIImage(systemName: "square.stack")) { _ in
-
+            let vc = self.storyboard?.instantiateViewController(withIdentifier: "AlbumDetailVC") as! AlbumDetailVC
+            vc.albumId = albumId
+            self.present(vc, animated: true)
             }
         ])
     }

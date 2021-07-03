@@ -9,6 +9,15 @@ import UIKit
 import Foundation
 
 class CheatSheet {
+    
+    static let window = UIApplication.shared.keyWindow!
+
+    //MARK:- Screen sizes
+    static let screenSize = UIScreen.main.bounds
+    static let screenWidth = screenSize.width
+    static let screenHeight = screenSize.height
+    static let currentDevice = UIDevice.current.userInterfaceIdiom
+    
     static let shared = CheatSheet()
     
     func simpleAlert(title: String, message: String, actionTitle: String) -> UIAlertController{
