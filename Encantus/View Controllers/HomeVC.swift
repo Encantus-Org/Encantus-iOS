@@ -53,24 +53,37 @@ class HomeVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // set the theme to always dark
+        UIApplication.shared.windows.forEach { window in
+            window.overrideUserInterfaceStyle = .dark
+        }
         
         fetchData()
         assignValuesToMiniPlayer()
         
         // design
+        let miniPlayerHeight = 120
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
-        miniPlayerView.frame = CGRect(x: 0, y: 730, width: 414, height: 140)
+        miniPlayerView.frame = CGRect(x: 0, y: 0, width: 414, height: miniPlayerHeight)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(miniPlayerDidTap(_:)))
         miniPlayerView.addGestureRecognizer(tapGesture)
         miniPlayerView.isUserInteractionEnabled  = true
-        miniPlayerView.layer.cornerRadius = 15
-        miniPlayerView.layer.masksToBounds = true
-        miniPlayerView.clipsToBounds = true
-        view.addSubview(miniPlayerView)
-        // set the theme to always dark
-        UIApplication.shared.windows.forEach { window in
-            window.overrideUserInterfaceStyle = .dark
-        }
+        
+        // add toolbar
+        let toolBar = UIToolbar()
+        toolBar.addSubview(miniPlayerView)
+        view.addSubview(toolBar)
+        toolBar.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.layer.maskedCorners = [.layerMaxXMinYCorner,.layerMinXMinYCorner]
+        toolBar.layer.cornerRadius = 15
+        toolBar.layer.masksToBounds = true
+        toolBar.clipsToBounds = true
+        // add constrainsts to toolbar
+        let guide = self.view.safeAreaLayoutGuide
+        toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
+        toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
+        toolBar.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: 35).isActive = true
+        toolBar.heightAnchor.constraint(equalToConstant: CGFloat(miniPlayerHeight)).isActive = true
     }
     
     @objc func miniPlayerDidTap(_ sender: UITapGestureRecognizer) {
@@ -241,7 +254,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     
     @objc func playBttnDidTap(sender: UIButton) {
         let MiniPlayer = MiniPlayer.shared
-        let buttonTag = sender.tag
+        let indexPath = sender.tag
         
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
         vc.modalPresentationStyle = .popover
@@ -253,7 +266,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             sheet.preferredCornerRadius = 30
         }
         
-        MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: buttonTag)
+        MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: indexPath)
         
         self.present(vc, animated: true)
         
@@ -262,7 +275,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             MiniPlayer.player.pause()
             MiniPlayer.player = nil
         }
-        configureMiniPlayer(songs: sortedSongs, position: buttonTag)
+        configureMiniPlayer(songs: sortedSongs, position: indexPath)
     }
 }
 

@@ -182,6 +182,8 @@ class MiniPlayer {
     var currentSongNameLabel: UILabel?
     var currentSongArtistNameLabel: UILabel?
     var playBttnInHome: UIButton?
+//    var backwardBttnInHome: UIButton?
+//    var forwardBttnInHome: UIButton
     
     // update chnages in MiniPlayer's UI located in HomeVC
     func configMiniPlayerUI(song: Song) {

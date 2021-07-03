@@ -30,7 +30,7 @@ class ArtistService {
     
     let albumArray = [Album(uid: "moosetape",
                             name: "MooseTape",
-                            albumCoverUrl: "nil",
+                            albumCoverUrl: "https://pbs.twimg.com/media/E1grV6kXIAEYKEi?format=jpg&name=medium",
                             genres: "Punjabi",
                             artistId: ["sidhu"],
                             trackId: ["Sidhu1","Sidhu2"]),
@@ -79,7 +79,7 @@ class ArtistService {
         return myAlbums
     }
     // get all songs of an Artist by Id
-    func getAllTracks(byArtistId: String, songs: [Song]) -> [Song] {
+    func getAllSongs(byArtistId: String, songs: [Song]) -> [Song] {
         let artist = getArtist(byId: byArtistId)
         var mySongs = [Song]()
         for song in songs {
