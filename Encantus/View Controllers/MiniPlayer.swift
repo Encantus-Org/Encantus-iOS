@@ -17,7 +17,6 @@ class MiniPlayer {
     
     static let shared = MiniPlayer()
     
-    
 //MARK: 👇🏻Functions specific to both PlayerVC & HomeVC
     // configure a song, basically play it from starting
     func configure(song: Song) {
