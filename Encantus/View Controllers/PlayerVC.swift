@@ -33,7 +33,7 @@ class PlayerVC: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupMediaPlayerNoticationView()
+        setupMediaPlayerNotificationView()
         
         // design
         self.coverImageView.layer.cornerRadius = self.coverImageView.bounds.height/12
@@ -49,20 +49,20 @@ class PlayerVC: UITableViewController {
         self.optionsBttn.changesSelectionAsPrimaryAction = false
     }
     override func viewWillAppear(_ animated: Bool) {
-        assignValuesToMiniPlayer()
+        assignValuesToEncantusPlayer()
         configure()
         if isComingFromMiniPlayer {
-            let MiniPlayer = MiniPlayer.shared
-            MiniPlayer.setPlayBttnImage(playBttn)
-            MiniPlayer.setImageAnimation(coverImageView)
+            let EncantusPlayer = EncantusPlayer.shared
+            EncantusPlayer.setPlayBttnImage(playBttn)
+            EncantusPlayer.setImageAnimation(coverImageView)
         }
     }
     @IBAction func SliderValueDidChanger(_ sender: Any) {
-        MiniPlayer.shared.changeSliderValueOnDrag()
+        EncantusPlayer.shared.changeSliderValueOnDrag()
     }
     
     // for the controls from notification center media player
-    func setupMediaPlayerNoticationView(){
+    func setupMediaPlayerNotificationView(){
         let commandCenter = MPRemoteCommandCenter.shared()
         // Add handler for Play Command
         commandCenter.playCommand.addTarget{ event in
@@ -86,16 +86,16 @@ class PlayerVC: UITableViewController {
     
     // to update now playing in notification center
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let MiniPlayer = MiniPlayer.shared
-        var nowPlayingInfo = MiniPlayer.nowPlayingInfo
+        let EncantusPlayer = EncantusPlayer.shared
+        var nowPlayingInfo = EncantusPlayer.nowPlayingInfo
         if object is AVPlayer {
-            switch MiniPlayer.player!.timeControlStatus {
+            switch EncantusPlayer.player!.timeControlStatus {
             case .waitingToPlayAtSpecifiedRate,.paused:
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.player!.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(EncantusPlayer.player!.currentTime())
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
                 MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
             case .playing:
-                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(MiniPlayer.player!.currentTime())
+                nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime ] = CMTimeGetSeconds(EncantusPlayer.player!.currentTime())
                 nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
                 MPNowPlayingInfoCenter.default ().nowPlayingInfo = nowPlayingInfo
             @unknown default:
@@ -119,29 +119,29 @@ extension PlayerVC {
         // check if user is coming from mini player of by tapping the main cell
         if isComingFromMiniPlayer {
             // We're not configuring the player again here because song is already playing and we don't want to have 2 songs playing at the same time
-            let MiniPlayer = MiniPlayer.shared
-            let songs = MiniPlayer.tracksToPlay()
-            let position = MiniPlayer.position()
+            let EncantusPlayer = EncantusPlayer.shared
+            let songs = EncantusPlayer.tracksToPlay()
+            let position = EncantusPlayer.position()
             let song = songs[position]
             
             configureOptionsBttn(forSong: song)
             // display a song's info if coming from miniPlayerView
-            MiniPlayer.currentTimeLabel = self.currentTimeLabel
-            MiniPlayer.songProgressSlider = self.songProgressSlider
+            EncantusPlayer.currentTimeLabel = self.currentTimeLabel
+            EncantusPlayer.songProgressSlider = self.songProgressSlider
             
-            MiniPlayer.configPlayerUI(withTrack: song)
+            EncantusPlayer.configPlayerUI(withTrack: song)
         } else {
-            let MiniPlayer = MiniPlayer.shared
-            let songs = MiniPlayer.tracksToPlay()
-            let position = MiniPlayer.position()
+            let EncantusPlayer = EncantusPlayer.shared
+            let songs = EncantusPlayer.tracksToPlay()
+            let position = EncantusPlayer.position()
             let song = songs[position]
             
             configureOptionsBttn(forSong: song)
             DispatchQueue.main.async {
-                MiniPlayer.currentTimeLabel = self.currentTimeLabel
-                MiniPlayer.songProgressSlider = self.songProgressSlider
+                EncantusPlayer.currentTimeLabel = self.currentTimeLabel
+                EncantusPlayer.songProgressSlider = self.songProgressSlider
                 
-                MiniPlayer.configPlayerUI(withTrack: song)
+                EncantusPlayer.configPlayerUI(withTrack: song)
             }
         }
     }
@@ -194,36 +194,36 @@ extension PlayerVC {
         ])
     }
     @objc func backwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.miniPlayerBackwardBttnDidTap()
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.miniPlayerBackwardBttnDidTap()
         
-        let currentPlayingTrack = MiniPlayer.currentPlayingTrack()
+        let currentPlayingTrack = EncantusPlayer.currentPlayingTrack()
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: currentPlayingTrack)
     }
     @objc func playBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
+        let EncantusPlayer = EncantusPlayer.shared
         
-        MiniPlayer.playOrPause()
+        EncantusPlayer.playOrPause()
         // show play/pause button
-        MiniPlayer.setPlayBttnImage(playBttn)
+        EncantusPlayer.setPlayBttnImage(playBttn)
         // show play/pause for MiniPlayer button
-        MiniPlayer.setPlayBttnImage(MiniPlayer.playBttnInHome!)
+        EncantusPlayer.setPlayBttnImage(EncantusPlayer.playBttnInHome!)
         // shrink image and send back to normal
-        MiniPlayer.setImageAnimation(coverImageView)
+        EncantusPlayer.setImageAnimation(coverImageView)
     }
     @objc func forwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.playerForwardBttnDidTap()
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.playerForwardBttnDidTap()
         
-        let currentPlayingTrack = MiniPlayer.currentPlayingTrack()
+        let currentPlayingTrack = EncantusPlayer.currentPlayingTrack()
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: currentPlayingTrack)
     }
     // Assign these values to adjacent values in MiniPlayer and see the magic
-    func assignValuesToMiniPlayer() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.assignPlayerValues(nameL: songNameLabel, artistL: artistNameLabel, currentTimeL: currentTimeLabel, completeSongDurationL: completeSongLengthLabel, slider: songProgressSlider, cover1: coverImageView, cover2: coverImageView2, playBttn: playBttn)
+    func assignValuesToEncantusPlayer() {
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.assignPlayerValues(nameL: songNameLabel, artistL: artistNameLabel, currentTimeL: currentTimeLabel, completeSongDurationL: completeSongLengthLabel, slider: songProgressSlider, cover1: coverImageView, cover2: coverImageView2, playBttn: playBttn)
     }
 }
 

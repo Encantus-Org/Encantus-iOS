@@ -14,7 +14,7 @@
 		412917EA268F80E600CC5591 /* AttributedFontExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E9268F80E600CC5591 /* AttributedFontExtention.swift */; };
 		412917EC268F923E00CC5591 /* ArtistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917EB268F923E00CC5591 /* ArtistService.swift */; };
 		4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */; };
-		4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141876D268E1CF400745DA6 /* MiniPlayer.swift */; };
+		4141876E268E1CF400745DA6 /* EncantusPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141876D268E1CF400745DA6 /* EncantusPlayer.swift */; };
 		41418772268E773400745DA6 /* TrackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418771268E773400745DA6 /* TrackService.swift */; };
 		41418774268E77BE00745DA6 /* CurrentPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418773268E77BE00745DA6 /* CurrentPlaying.swift */; };
 		4156DC78268B7B7D00D83BA6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC77268B7B7D00D83BA6 /* Track.swift */; };
@@ -41,7 +41,7 @@
 		412917E9268F80E600CC5591 /* AttributedFontExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedFontExtention.swift; sourceTree = "<group>"; };
 		412917EB268F923E00CC5591 /* ArtistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistService.swift; sourceTree = "<group>"; };
 		4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+extensions.swift"; sourceTree = "<group>"; };
-		4141876D268E1CF400745DA6 /* MiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayer.swift; sourceTree = "<group>"; };
+		4141876D268E1CF400745DA6 /* EncantusPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncantusPlayer.swift; sourceTree = "<group>"; };
 		41418771268E773400745DA6 /* TrackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackService.swift; sourceTree = "<group>"; };
 		41418773268E77BE00745DA6 /* CurrentPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPlaying.swift; sourceTree = "<group>"; };
 		4156DC77268B7B7D00D83BA6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 		412917E2268F799400CC5591 /* Service */ = {
 			isa = PBXGroup;
 			children = (
-				4141876D268E1CF400745DA6 /* MiniPlayer.swift */,
+				4141876D268E1CF400745DA6 /* EncantusPlayer.swift */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -330,7 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				412917EC268F923E00CC5591 /* ArtistService.swift in Sources */,
-				4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */,
+				4141876E268E1CF400745DA6 /* EncantusPlayer.swift in Sources */,
 				4156DC78268B7B7D00D83BA6 /* Track.swift in Sources */,
 				412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */,
 				41AAEA13269090700030E3E8 /* StretchyHeader.swift in Sources */,

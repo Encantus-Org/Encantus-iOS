@@ -59,7 +59,7 @@ class HomeVC: UITableViewController {
         }
         
         fetchData()
-        assignValuesToMiniPlayer()
+        assignValuesToEncantusPlayer()
         // design
         let miniPlayerHeight = 120
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
@@ -225,7 +225,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 cell.isSelected = true
             }
         } else {
-            let MiniPlayer = MiniPlayer.shared
+            let EncantusPlayer = EncantusPlayer.shared
             let buttonTag = indexPath.row
             
             guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
@@ -238,21 +238,21 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 sheet.preferredCornerRadius = 30
             }
             
-            MiniPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: buttonTag)
+            EncantusPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: buttonTag)
             
             self.present(vc, animated: true)
             
             // check if any song is already playing in player, if so then remover the player and initiate a new one
             if TrackService.shared.checkStatus() == .isPlayingg {
-                MiniPlayer.player.pause()
-                MiniPlayer.player = nil
+                EncantusPlayer.player.pause()
+                EncantusPlayer.player = nil
             }
             configureMiniPlayer(withTracks: sortedTracks, position: buttonTag)
         }
     }
     
     @objc func playBttnDidTap(sender: UIButton) {
-        let MiniPlayer = MiniPlayer.shared
+        let EncantusPlayer = EncantusPlayer.shared
         let indexPath = sender.tag
         
         guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
@@ -265,14 +265,14 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             sheet.preferredCornerRadius = 30
         }
         
-        MiniPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: indexPath)
+        EncantusPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: indexPath)
         
         self.present(vc, animated: true)
         
         // check if any track is already playing in player, if so then remover the player and initiate a new one
         if TrackService.shared.checkStatus() == .isPlayingg {
-            MiniPlayer.player.pause()
-            MiniPlayer.player = nil
+            EncantusPlayer.player.pause()
+            EncantusPlayer.player = nil
         }
         configureMiniPlayer(withTracks: sortedTracks, position: indexPath)
     }
@@ -281,9 +281,9 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
 // MiniPlayer
 extension HomeVC {
     func configureMiniPlayer(withTracks: [Track], position: Int) {
-        let MiniPlayer = MiniPlayer.shared
+        let EncantusPlayer = EncantusPlayer.shared
         let track = withTracks[position]
-        MiniPlayer.configMiniPlayerUI(withTrack: track)
+        EncantusPlayer.configMiniPlayerUI(withTrack: track)
         // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
         backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
@@ -292,25 +292,25 @@ extension HomeVC {
         // set current playing tracks's info
         currentPlayingInfo = CurrentPlaying(playingList: withTracks, position: position)
         // configure player finally
-        MiniPlayer.configurePlayer(withTracks: track)
+        EncantusPlayer.configurePlayer(withTracks: track)
     }
     @objc func forwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.miniPlayerForwardBttnDidTap()
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.miniPlayerForwardBttnDidTap()
     }
     @objc func backwardBttnDidTap() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.miniPlayerBackwardBttnDidTap()
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.miniPlayerBackwardBttnDidTap()
     }
     @objc func playBttnDidTapp() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.playOrPause()
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.playOrPause()
         // show play/pause button
-        MiniPlayer.setPlayBttnImage(playBttn)
+        EncantusPlayer.setPlayBttnImage(playBttn)
     }
     // Assign these values to values in MiniPlayer and see the magic
-    func assignValuesToMiniPlayer() {
-        let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.assignMiniPlayerValues(nameL: currentSongNameLabel, artistL: currentSongArtistNameLabel, cover: currentSongCoverImageView, playBttn: playBttn)
+    func assignValuesToEncantusPlayer() {
+        let EncantusPlayer = EncantusPlayer.shared
+        EncantusPlayer.assignMiniPlayerValues(nameL: currentSongNameLabel, artistL: currentSongArtistNameLabel, cover: currentSongCoverImageView, playBttn: playBttn)
     }
 }

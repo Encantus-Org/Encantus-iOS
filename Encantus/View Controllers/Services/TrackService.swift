@@ -18,8 +18,8 @@ class TrackService {
     static let shared = TrackService()
     
     func checkStatus() -> TrackStatus {
-        //using miniplayer to test player capabilities
-        let player = MiniPlayer.shared.player
+        //using EncantusPlayer to test player capabilities
+        let player = EncantusPlayer.shared.player
         guard player != nil else {
             return .isPausedd
         }
@@ -27,7 +27,7 @@ class TrackService {
     }
     
     func checkIfPaused() -> TrackStatus {
-        let player = MiniPlayer.shared.player
+        let player = EncantusPlayer.shared.player
         guard player?.isPlaying != false else { return .isPausedd }
         return .isPlayingg
     }

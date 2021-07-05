@@ -14,12 +14,12 @@ import AVFoundation
 We've 2 scenes(players) while playing a song -> 1. Player i.e. situated in PlayerVC
                                                 2. MiniPlayer i.e situate in toolbar in HomeVC
 */
-class MiniPlayer {
+class EncantusPlayer {
     
     var player: AVPlayer!
     var nowPlayingInfo = [String : Any]()
     
-    static let shared = MiniPlayer()
+    static let shared = EncantusPlayer()
     
 //MARK: 👇🏻Functions specific to both PlayerVC & HomeVC
     // configure a track, basically play it
@@ -167,7 +167,7 @@ class MiniPlayer {
 }
 
 // MINIPLAYER ONLY
-extension MiniPlayer {
+extension EncantusPlayer {
     // update changes in MiniPlayer's UI located in HomeVC
     func configMiniPlayerUI(withTrack: Track) {
         let coverUrl = withTrack.coverUrlString
@@ -218,7 +218,7 @@ extension MiniPlayer {
 }
 
 // PLAYER ONLY
-extension MiniPlayer {
+extension EncantusPlayer {
     // update changes in Player's UI located in PlayerVC
     func configPlayerUI(withTrack: Track){
         // get track's data
@@ -240,7 +240,7 @@ extension MiniPlayer {
         // track progress slider
         songProgressSlider!.minimumValue = 0.0
         // get track's total duration
-        let duration = MiniPlayer.shared.player!.currentItem?.asset.duration
+        let duration = EncantusPlayer.shared.player!.currentItem?.asset.duration
         DispatchQueue.main.async {
             self.completeSongLengthLabel!.text = duration?.minutes
             self.songProgressSlider!.maximumValue = Float(CMTimeGetSeconds(duration!))
@@ -274,13 +274,13 @@ extension MiniPlayer {
         let targetTime: CMTime = CMTimeMake(value: seconds, timescale: 1)
         
         // to update now playing in notification centre
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.shared.player!.currentTime())
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(EncantusPlayer.shared.player!.currentTime())
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
         MPNowPlayingInfoCenter.default().nowPlayingInfo=nowPlayingInfo
         
-        MiniPlayer.shared.player!.seek(to: targetTime) { (isCompleted) in
+        EncantusPlayer.shared.player!.seek(to: targetTime) { (isCompleted) in
             // to update now playing in notification centre
-            self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.shared.player!.currentTime())
+            self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(EncantusPlayer.shared.player!.currentTime())
             self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
             MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
         }
@@ -311,7 +311,7 @@ extension MiniPlayer {
 }
 
 // Current Playing list functions
-extension MiniPlayer {
+extension EncantusPlayer {
     func tracksToPlay() -> [Track]{
         let array = currentPlayingInfo?.playingList
         guard array != nil else { return [Track(uid: "Nan", name: "NaN", albumId: "NaN", artistId: ["NaN"], genres: "", urlString: "Nan", coverUrlString: "NaN")]}
