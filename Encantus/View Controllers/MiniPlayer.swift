@@ -119,44 +119,12 @@ class MiniPlayer {
         }
     }
     
-    @objc func forwardBttnDidTap() {
-        let tracksToPlay = tracksToPlay()
-        var position = position()
-        
-        // change the position of track in the playing list
-        if position < (tracksToPlay.count - 1) {
-            position = position + 1
-        }
-        // update current playing value after change the position
-        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
-        // update changes in UI of miniPlayer
-        configMiniPlayerUI(withTrack: tracksToPlay[position])
-        // take user to next track
-        forward(inTrackList: tracksToPlay, toPosition: position)
-    }
-    
     func forward(inTrackList: [Track], toPosition: Int) {
         player.pause()
         if coverImageView!.image != nil {
             coverImageView!.toIdentity(1.05)
         }
         configurePlayer(withTracks: inTrackList[toPosition])
-    }
-    
-    @objc func backwardBttnDidTap() {
-        let tracksToPlay = tracksToPlay()
-        var position = position()
-        
-        // change the position of track in an array
-        if position>0 {
-            position = position - 1
-        }
-        // update current playing value after change the position
-        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
-        // update changes in UI of miniPlayer
-        configMiniPlayerUI(withTrack: tracksToPlay[position])
-        // take user to previous track
-        backward(inTrackList: tracksToPlay, toPosition: position)
     }
     
     func backward(inTrackList: [Track], toPosition: Int) {
@@ -185,19 +153,17 @@ class MiniPlayer {
     var currentSongNameLabel: UILabel?
     var currentSongArtistNameLabel: UILabel?
     var playBttnInHome: UIButton?
-//    var backwardBttnInHome: UIButton?
-//    var forwardBttnInHome: UIButton
     
 //MARK: 👇🏻references specific to Player only
     var timer: Timer!
+    var songNameLabel: UILabel?
+    var artistNameLabel: UILabel?
     var currentTimeLabel: UILabel?
     var completeSongLengthLabel: UILabel?
     var songProgressSlider: UISlider?
     var playBttn: UIButton?
     var coverImageView: UIImageView?
     var coverImageView2: UIImageView?
-    var songNameLabel: UILabel?
-    var artistNameLabel: UILabel?
 }
 
 // MINIPLAYER ONLY
@@ -212,6 +178,42 @@ extension MiniPlayer {
         currentSongCoverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         currentSongNameLabel!.text = name
         currentSongArtistNameLabel!.text = artist
+    }
+    @objc func miniPlayerBackwardBttnDidTap() {
+        let tracksToPlay = tracksToPlay()
+        var position = position()
+        
+        // change the position of track in an array
+        if position>0 {
+            position = position - 1
+        }
+        // update current playing value after change the position
+        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
+        // update changes in UI of miniPlayer
+        configMiniPlayerUI(withTrack: tracksToPlay[position])
+        // take user to previous track
+        backward(inTrackList: tracksToPlay, toPosition: position)
+    }
+    @objc func miniPlayerForwardBttnDidTap() {
+        let tracksToPlay = tracksToPlay()
+        var position = position()
+        
+        // change the position of track in the playing list
+        if position < (tracksToPlay.count - 1) {
+            position = position + 1
+        }
+        // update current playing value after change the position
+        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
+        // update changes in UI of miniPlayer
+        configMiniPlayerUI(withTrack: tracksToPlay[position])
+        // take user to next track
+        forward(inTrackList: tracksToPlay, toPosition: position)
+    }
+    func assignMiniPlayerValues(nameL:UILabel, artistL: UILabel, cover: UIImageView,playBttn: UIButton) {
+        currentSongNameLabel = nameL
+        currentSongArtistNameLabel = artistL
+        currentSongCoverImageView = cover
+        playBttnInHome = playBttn
     }
 }
 
@@ -284,6 +286,28 @@ extension MiniPlayer {
         }
         self.currentTimeLabel!.text = String(TimeInterval(songProgressSlider!.value).minutes())
     }
+    @objc func playerForwardBttnDidTap() {
+        miniPlayerForwardBttnDidTap()
+        
+        let trackToPlay = tracksToPlay()[position()]
+        configPlayerUI(withTrack: trackToPlay)
+    }
+    @objc func playerBackwardBttnDidTap() {
+        miniPlayerBackwardBttnDidTap()
+        
+        let trackToPlay = tracksToPlay()[position()]
+        configPlayerUI(withTrack: trackToPlay)
+    }
+    func assignPlayerValues(nameL:UILabel, artistL: UILabel, currentTimeL: UILabel, completeSongDurationL: UILabel, slider: UISlider, cover1: UIImageView, cover2: UIImageView, playBttn: UIButton) {
+        songNameLabel = nameL
+        artistNameLabel = artistL
+        currentTimeLabel = currentTimeL
+        completeSongLengthLabel = completeSongDurationL
+        coverImageView = cover1
+        coverImageView2 = cover2
+        songProgressSlider = slider
+        self.playBttn = playBttn
+    }
 }
 
 // Current Playing list functions
@@ -300,5 +324,8 @@ extension MiniPlayer {
     }
     func updateCurrentPlaying(withTracksList: [Track], andPosition: Int){
         currentPlayingInfo = CurrentPlaying(playingList: withTracksList, position: andPosition)
+    }
+    func currentPlayingTrack() -> Track {
+        return tracksToPlay()[position()]
     }
 }

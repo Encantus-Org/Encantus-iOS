@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19EEA4603448987F8BEA9560 /* Pods_Encantus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 979D95FC325A954FDA5C6089 /* Pods_Encantus.framework */; };
+		411A2EA22693171E006898CA /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411A2EA12693171E006898CA /* Album.swift */; };
 		412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E3268F79AF00CC5591 /* ArtistProfileVC.swift */; };
 		412917E7268F7A4700CC5591 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E6268F7A4700CC5591 /* Artist.swift */; };
 		412917EA268F80E600CC5591 /* AttributedFontExtention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917E9268F80E600CC5591 /* AttributedFontExtention.swift */; };
@@ -34,6 +35,7 @@
 
 /* Begin PBXFileReference section */
 		28EFC4F2CB09FE83A0A1BEF9 /* Pods-Encantus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Encantus.release.xcconfig"; path = "Target Support Files/Pods-Encantus/Pods-Encantus.release.xcconfig"; sourceTree = "<group>"; };
+		411A2EA12693171E006898CA /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		412917E3268F79AF00CC5591 /* ArtistProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistProfileVC.swift; sourceTree = "<group>"; };
 		412917E6268F7A4700CC5591 /* Artist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		412917E9268F80E600CC5591 /* AttributedFontExtention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedFontExtention.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 			children = (
 				412917EB268F923E00CC5591 /* ArtistService.swift */,
 				412917E6268F7A4700CC5591 /* Artist.swift */,
+				411A2EA12693171E006898CA /* Album.swift */,
 			);
 			name = Service;
 			sourceTree = "<group>";
@@ -345,6 +348,7 @@
 				4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */,
 				41CBDDD9268B6829003C4966 /* SceneDelegate.swift in Sources */,
 				41418774268E77BE00745DA6 /* CurrentPlaying.swift in Sources */,
+				411A2EA22693171E006898CA /* Album.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

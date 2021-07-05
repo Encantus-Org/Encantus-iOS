@@ -19,7 +19,7 @@ class CategoryCell: UICollectionViewCell {
         }
     }
 }
-class SongsCell: UICollectionViewCell {
+class TracksCell: UICollectionViewCell {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet weak var coverImageView: UIImageView!
     @IBOutlet weak var songNameLabel: UILabel!
@@ -60,7 +60,6 @@ class HomeVC: UITableViewController {
         
         fetchData()
         assignValuesToMiniPlayer()
-        
         // design
         let miniPlayerHeight = 120
         currentSongCoverImageView.layer.cornerRadius = currentSongCoverImageView.layer.bounds.height/4
@@ -176,14 +175,14 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             }
             return cell
         } else {
-            let cell: SongsCell = collectionView.dequeueReusableCell(withReuseIdentifier: "SongsCell", for: indexPath) as! SongsCell
+            let cell: TracksCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TracksCell", for: indexPath) as! TracksCell
             
             // get data
-            let song = sortedTracks[indexPath.row]
-            let name = song.name
-            let artistId = song.artistId[0]
+            let track = sortedTracks[indexPath.row]
+            let name = track.name
+            let artistId = track.artistId[0]
             let artist = ArtistService.shared.getArtist(byId: artistId).name
-            let coverUrl = song.coverUrlString
+            let coverUrl = track.coverUrlString
             
             // update UI
             cell.songNameLabel.text = name
@@ -205,7 +204,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == categoryCollectionView {
             let genres = categories[indexPath.row]
-            // if genres is selected to all then sort the array to all songs
+            // if genres is selected to all then sort the array to all tracks
             if genres == "All"{
                 sortedTracks = tracks
             } else {
@@ -297,11 +296,11 @@ extension HomeVC {
     }
     @objc func forwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.forwardBttnDidTap()
+        MiniPlayer.miniPlayerForwardBttnDidTap()
     }
     @objc func backwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.backwardBttnDidTap()
+        MiniPlayer.miniPlayerBackwardBttnDidTap()
     }
     @objc func playBttnDidTapp() {
         let MiniPlayer = MiniPlayer.shared
@@ -309,12 +308,9 @@ extension HomeVC {
         // show play/pause button
         MiniPlayer.setPlayBttnImage(playBttn)
     }
-    // Assign these values to adjacent values in MiniPlayer and see the magic
+    // Assign these values to values in MiniPlayer and see the magic
     func assignValuesToMiniPlayer() {
         let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.currentSongNameLabel = self.currentSongNameLabel
-        MiniPlayer.currentSongArtistNameLabel = self.currentSongArtistNameLabel
-        MiniPlayer.currentSongCoverImageView = self.currentSongCoverImageView
-        MiniPlayer.playBttnInHome = self.playBttn
+        MiniPlayer.assignMiniPlayerValues(nameL: currentSongNameLabel, artistL: currentSongArtistNameLabel, cover: currentSongCoverImageView, playBttn: playBttn)
     }
 }

@@ -19,6 +19,7 @@ class AlbumDetailVC: UITableViewController {
     var album: Album? = nil
     var allSongsInAlbum = [Track]()
     var observers = [AnyCancellable]()
+    let dismissBttn = UIButton()
     
     let header = StretchyTableHeaderView(frame: CGRect(x: 0, y: 0, width: CheatSheet.screenWidth, height: CheatSheet.screenWidth))
     
@@ -41,7 +42,24 @@ class AlbumDetailVC: UITableViewController {
         header.imageView.layer.maskedCorners = [.layerMaxXMaxYCorner,.layerMinXMaxYCorner] // [.layerMaxXMinYCorner,.layerMinXMinYCorner]
         header.imageView.kf.setImage(with: URL(string: coverUrl!), placeholder: nil, options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         tableView.tableHeaderView = header
+        
+        // dismiss action
+        dismissBttn.setImage(UIImage(systemName: "chevron.backward.circle.fill"), for: .normal)
+        dismissBttn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        dismissBttn.tintColor = UIColor.white
+        dismissBttn.addTarget(self, action: #selector(dismissView), for: .allEvents)
+        
+        let leftItem = UIBarButtonItem(customView: dismissBttn)
+        self.navigationItem.leftBarButtonItem = leftItem
+        
+        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(dismissView))
+        edgeGesture.edges = .left
+        self.view.addGestureRecognizer(edgeGesture)
     }
+    @objc func dismissView() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func fetchAllSongs(){
         // get songs
         DataService.shared.getTracks()
@@ -56,7 +74,7 @@ class AlbumDetailVC: UITableViewController {
                 }
             }, receiveValue: { [weak self] value in
                 let albumId = self?.album?.uid
-                let allSongsInAlbum = ArtistService.shared.getAllSongs(byAlbumId: albumId!, songs: value)
+                let allSongsInAlbum = ArtistService.shared.getAllTracks(byAlbumId: albumId!, amongTracks: value)
                 self?.allSongsInAlbum = allSongsInAlbum
                 self?.tableView.reloadData()
                 print(value)

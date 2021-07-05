@@ -17,12 +17,3 @@ struct Artist: Equatable {
     var followers: Int
     var origin: String
 }
-
-struct Album: Equatable {
-    var uid: String
-    var name: String
-    var albumCoverUrl: String
-    var genres: String
-    var artistId: [String]
-    var trackId: [String]
-}

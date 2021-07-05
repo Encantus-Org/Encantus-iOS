@@ -78,25 +78,25 @@ class ArtistService {
         }
         return myAlbums
     }
-    // get all songs of an Artist by Id
-    func getAllSongs(byArtistId: String, songs: [Track]) -> [Track] {
+    // get all tracks of an Artist by Id
+    func getAllTracks(byArtistId: String, amongTracks: [Track]) -> [Track] {
         let artist = getArtist(byId: byArtistId)
-        var mySongs = [Track]()
-        for song in songs {
-            if artist.tracksId.contains(song.uid){
-                mySongs.append(song)
+        var myTracks = [Track]()
+        for track in amongTracks {
+            if artist.tracksId.contains(track.uid){
+                myTracks.append(track)
             }
         }
-        return mySongs
+        return myTracks
     }
-    func getAllSongs(byAlbumId: String, songs: [Track]) -> [Track] {
+    func getAllTracks(byAlbumId: String, amongTracks: [Track]) -> [Track] {
         let album = getAlbum(byId: byAlbumId)
-        var mySongs = [Track]()
-        for song in songs {
-            if album.trackId.contains(song.uid){
-                mySongs.append(song)
+        var myTracks = [Track]()
+        for track in amongTracks {
+            if album.trackId.contains(track.uid){
+                myTracks.append(track)
             }
         }
-        return mySongs
+        return myTracks
     }
 }

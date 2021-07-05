@@ -73,6 +73,22 @@ class ArtistProfileVC: UITableViewController {
         tipBttn.layer.borderWidth = 1
         tipBttn.layer.cornerRadius = 10
         tipBttn.layer.borderColor = UIColor(named: "lightPurpleColor")!.cgColor
+        
+        // dismiss action
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        button.tintColor = UIColor.white
+        button.addTarget(self, action: #selector(dismissView), for: .allEvents)
+        let leftItem = UIBarButtonItem(customView: button)
+        self.navigationItem.leftBarButtonItem = leftItem
+        
+        let edgeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(dismissView))
+        edgeGesture.edges = .left
+        self.view.addGestureRecognizer(edgeGesture)
+    }
+    @objc func dismissView() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func fetchArtistData() {
@@ -104,6 +120,7 @@ class ArtistProfileVC: UITableViewController {
             verifiedImageView.image = UIImage(systemName: "checkmark.seal.fill")
         }
         
+        self.title = uid
         artistUsernameLabel.text = uid
         artistProfileImageView!.kf.setImage(with: URL(string: profileImageUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
         artistNameLabel.text = name
@@ -134,7 +151,7 @@ class ArtistProfileVC: UITableViewController {
                 self!.optionsCollectionView.reloadData()
             }).store(in: &observers)
         
-        // get songs
+        // get tracks
         DataService.shared.getTracks()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -146,7 +163,7 @@ class ArtistProfileVC: UITableViewController {
                     break
                 }
             }, receiveValue: { [weak self] value in
-                let allTracks = ArtistService.shared.getAllSongs(byArtistId: self!.artistId!, songs: value)
+                let allTracks = ArtistService.shared.getAllTracks(byArtistId: (self?.artistId)!, amongTracks: value)
                 self?.allTracks = allTracks
                 self?.tableView.reloadData()
             }).store(in: &observers)
@@ -168,11 +185,11 @@ extension ArtistProfileVC {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if whichCell == "Tracks" {
             let cell:SongsOnArtistProfileVcCell = tableView.dequeueReusableCell(withIdentifier: "SongsOnArtistProfileVcCell", for: indexPath) as! SongsOnArtistProfileVcCell
-            let song = allTracks[indexPath.row]
-            let name = song.name
-            let artistId = song.artistId[0]
+            let track = allTracks[indexPath.row]
+            let name = track.name
+            let artistId = track.artistId[0]
             let artist = ArtistService.shared.getArtist(byId: artistId).name
-            let cover = song.coverUrlString
+            let cover = track.coverUrlString
             
             cell.coverImageView.kf.setImage(with: URL(string: cover), placeholder: UIImage(named: "Placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
             cell.nameLabel.text = name

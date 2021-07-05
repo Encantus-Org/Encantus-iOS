@@ -146,57 +146,60 @@ extension PlayerVC {
         }
     }
     func configureOptionsBttn(forSong: Track) {
-        let song = forSong
+        let track = forSong
         // get song data
-        let artistId = song.artistId[0]
+        let artistId = track.artistId[0]
         let artist = ArtistService.shared.getArtist(byId: artistId).name
-        let urlString = song.urlString
+        let urlString = track.urlString
         let cover = UIImage(named: "encantus-logo")
-        let albumId = song.albumId
+        let albumId = track.albumId
         
         // configure context menu for button
         self.optionsBttn.menu = UIMenu(children: [
             UIAction(title: "Share",image: UIImage(systemName: "square.and.arrow.up")) { [self] _ in
-            let message = "Hey, I'm listenting to \(artist) on Encantus App. Join me in."
-            let image = cover
-            let myWebsite = NSURL(string: urlString)
-            let shareAll = [image! ,message, myWebsite!] as [Any]
-            let activityViewController = UIActivityViewController(activityItems: shareAll as [Any], applicationActivities: nil)
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true, completion: nil)
+                let message = "Hey, I'm listenting to \(artist) on Encantus App. Join me in."
+                let image = cover
+                let myWebsite = NSURL(string: urlString)
+                let shareAll = [image! ,message, myWebsite!] as [Any]
+                let activityViewController = UIActivityViewController(activityItems: shareAll as [Any], applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = self.view
+                self.present(activityViewController, animated: true, completion: nil)
             },
             UIAction(title: "Copy link",image: UIImage(systemName: "link")) { _ in
-            let clipBoard = UIPasteboard.general
-            clipBoard.string = urlString
+                let clipBoard = UIPasteboard.general
+                clipBoard.string = urlString
             },
             UIAction(title: "Go to artist",image: UIImage(systemName: "music.mic")) { _ in
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "ArtistProfileVC") as! ArtistProfileVC
-            vc.artistId = artistId
-            self.present(vc, animated: true)
+                weak var pvc = self.presentingViewController
+                self.dismiss(animated: true) {
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "ArtistProfileVC") as! ArtistProfileVC
+                    vc.artistId = artistId
+                    let navigationController = UINavigationController()
+                    navigationController.viewControllers = [vc]
+                    navigationController.modalPresentationStyle = .fullScreen
+                    pvc?.present(navigationController, animated: true)
+                }
             },
             UIAction(title: "Go to album",image: UIImage(systemName: "square.stack")) { _ in
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "AlbumDetailVC") as! AlbumDetailVC
-            vc.albumId = albumId
-            self.present(vc, animated: true)
+                weak var pvc = self.presentingViewController
+                self.dismiss(animated: true) {
+                    let vc = self.storyboard?.instantiateViewController(withIdentifier: "AlbumDetailVC") as! AlbumDetailVC
+                    vc.albumId = albumId
+                    let navigationController = UINavigationController()
+                    navigationController.viewControllers = [vc]
+                    navigationController.modalPresentationStyle = .fullScreen
+                    pvc?.present(navigationController, animated: true)
+                }
             }
         ])
     }
     @objc func backwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        var songs = MiniPlayer.tracksToPlay()
-        var position = MiniPlayer.position()
+        MiniPlayer.miniPlayerBackwardBttnDidTap()
         
-        MiniPlayer.backwardBttnDidTap()
-        
-        // now that posituin value is updated, we'll get it back
-        songs = MiniPlayer.tracksToPlay()
-        position = MiniPlayer.position()
-        
-        let song = songs[position]
+        let currentPlayingTrack = MiniPlayer.currentPlayingTrack()
         // configure option's menu button when song changes
-        configureOptionsBttn(forSong: song)
-        // update changes in UI of Player
-        MiniPlayer.configPlayerUI(withTrack: song)
+        configureOptionsBttn(forSong: currentPlayingTrack)
     }
     @objc func playBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
@@ -211,31 +214,16 @@ extension PlayerVC {
     }
     @objc func forwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        var songs = MiniPlayer.tracksToPlay()
-        var position = MiniPlayer.position()
+        MiniPlayer.playerForwardBttnDidTap()
         
-        MiniPlayer.forwardBttnDidTap()
-        
-        // now that posituin value is updated, we'll get it back
-        songs = MiniPlayer.tracksToPlay()
-        position = MiniPlayer.position()
-        
-        let song = songs[position]
+        let currentPlayingTrack = MiniPlayer.currentPlayingTrack()
         // configure option's menu button when song changes
-        configureOptionsBttn(forSong: song)
-        // update changes in UI of Player
-        MiniPlayer.configPlayerUI(withTrack: song)
+        configureOptionsBttn(forSong: currentPlayingTrack)
     }
     // Assign these values to adjacent values in MiniPlayer and see the magic
     func assignValuesToMiniPlayer() {
         let MiniPlayer = MiniPlayer.shared
-        MiniPlayer.playBttn = self.playBttn
-        MiniPlayer.coverImageView = self.coverImageView
-        MiniPlayer.coverImageView2 = self.coverImageView2
-        MiniPlayer.songNameLabel = self.songNameLabel
-        MiniPlayer.artistNameLabel = self.artistNameLabel
-        MiniPlayer.songProgressSlider = self.songProgressSlider
-        MiniPlayer.completeSongLengthLabel = self.completeSongLengthLabel
+        MiniPlayer.assignPlayerValues(nameL: songNameLabel, artistL: artistNameLabel, currentTimeL: currentTimeLabel, completeSongDurationL: completeSongLengthLabel, slider: songProgressSlider, cover1: coverImageView, cover2: coverImageView2, playBttn: playBttn)
     }
 }
 
