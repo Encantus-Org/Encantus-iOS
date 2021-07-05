@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Song: Equatable {
+struct Track: Equatable {
     var uid: String
     var name: String
     var albumId: String

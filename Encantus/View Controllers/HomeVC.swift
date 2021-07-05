@@ -31,8 +31,8 @@ class HomeVC: UITableViewController {
     
     var observers: [AnyCancellable] = []
     private var categories = [String]()
-    private var songs = [Song]()
-    private var sortedSongs = [Song]()
+    private var tracks = [Track]()
+    private var sortedTracks = [Track]()
     
     // MiniPlayer config.
     @IBOutlet var miniPlayerView: UIView!
@@ -78,7 +78,7 @@ class HomeVC: UITableViewController {
         toolBar.layer.cornerRadius = 15
         toolBar.layer.masksToBounds = true
         toolBar.clipsToBounds = true
-        // add constrainsts to toolbar
+        // add constraints to toolbar
         let guide = self.view.safeAreaLayoutGuide
         toolBar.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
         toolBar.leadingAnchor.constraint(equalTo: guide.leadingAnchor).isActive = true
@@ -87,8 +87,8 @@ class HomeVC: UITableViewController {
     }
     
     @objc func miniPlayerDidTap(_ sender: UITapGestureRecognizer) {
-        if SongService.shared.checkStatus() == .isPlayingg {
-            print("Player Preseted using miniPlayer")
+        if TrackService.shared.checkStatus() == .isPlayingg {
+            print("Player Presented using miniPlayer")
             guard let vc = self.storyboard?.instantiateViewController(withIdentifier: "PlayerVC") as? PlayerVC else {return}
             vc.modalPresentationStyle = .popover
             
@@ -133,8 +133,8 @@ extension HomeVC {
                 self!.categories = value
                 self!.categoryCollectionView.reloadData()
             }).store(in: &observers)
-        // get songs
-        DataService.shared.getSongs()
+        // get tracks
+        DataService.shared.getTracks()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -145,8 +145,8 @@ extension HomeVC {
                     break
                 }
             }, receiveValue: { [weak self] value in
-                self!.songs = value
-                self!.sortedSongs = value
+                self!.tracks = value
+                self!.sortedTracks = value
                 self!.songCollectionView.reloadData()
             }).store(in: &observers)
     }
@@ -159,7 +159,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         if collectionView == categoryCollectionView {
             return categories.count
         } else {
-            return sortedSongs.count
+            return sortedTracks.count
         }
     }
     
@@ -179,7 +179,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             let cell: SongsCell = collectionView.dequeueReusableCell(withReuseIdentifier: "SongsCell", for: indexPath) as! SongsCell
             
             // get data
-            let song = sortedSongs[indexPath.row]
+            let song = sortedTracks[indexPath.row]
             let name = song.name
             let artistId = song.artistId[0]
             let artist = ArtistService.shared.getArtist(byId: artistId).name
@@ -205,12 +205,12 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == categoryCollectionView {
             let genres = categories[indexPath.row]
-            // if generes is selected to all then sort the array to all songs
+            // if genres is selected to all then sort the array to all songs
             if genres == "All"{
-                sortedSongs = songs
+                sortedTracks = tracks
             } else {
-                // if generes is selected to `any specific calue` then sort the array accordingly
-                sortedSongs = SongService.shared.sortBy(genres: genres, arrayToSort: self.songs)
+                // if genres is selected to `any specific value` then sort the array accordingly
+                sortedTracks = TrackService.shared.sortBy(genres: genres, arrayToSort: self.tracks)
             }
             // reload the collection view to see the updated
             UIView.transition(with: songCollectionView, duration: 0.5, options: .transitionCrossDissolve, animations: {self.songCollectionView.reloadData()}, completion: nil)
@@ -239,16 +239,16 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
                 sheet.preferredCornerRadius = 30
             }
             
-            MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: buttonTag)
+            MiniPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: buttonTag)
             
             self.present(vc, animated: true)
             
-            // check if any song is already playing in player, if so then remover the player and initiater a new one
-            if SongService.shared.checkStatus() == .isPlayingg {
+            // check if any song is already playing in player, if so then remover the player and initiate a new one
+            if TrackService.shared.checkStatus() == .isPlayingg {
                 MiniPlayer.player.pause()
                 MiniPlayer.player = nil
             }
-            configureMiniPlayer(songs: sortedSongs, position: buttonTag)
+            configureMiniPlayer(withTracks: sortedTracks, position: buttonTag)
         }
     }
     
@@ -266,34 +266,34 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
             sheet.preferredCornerRadius = 30
         }
         
-        MiniPlayer.updateCurrentPlaying(songs: sortedSongs, position: indexPath)
+        MiniPlayer.updateCurrentPlaying(withTracksList: sortedTracks, andPosition: indexPath)
         
         self.present(vc, animated: true)
         
-        // check if any song is already playing in player, if so then remover the player and initiater a new one
-        if SongService.shared.checkStatus() == .isPlayingg {
+        // check if any track is already playing in player, if so then remover the player and initiate a new one
+        if TrackService.shared.checkStatus() == .isPlayingg {
             MiniPlayer.player.pause()
             MiniPlayer.player = nil
         }
-        configureMiniPlayer(songs: sortedSongs, position: indexPath)
+        configureMiniPlayer(withTracks: sortedTracks, position: indexPath)
     }
 }
 
 // MiniPlayer
 extension HomeVC {
-    func configureMiniPlayer(songs: [Song], position: Int) {
+    func configureMiniPlayer(withTracks: [Track], position: Int) {
         let MiniPlayer = MiniPlayer.shared
-        let song = songs[position]
-        MiniPlayer.configMiniPlayerUI(song: song)
+        let track = withTracks[position]
+        MiniPlayer.configMiniPlayerUI(withTrack: track)
         // set music control button actions
         playBttn.addTarget(self, action: #selector(playBttnDidTapp), for: .touchUpInside)
         backwardBttn.addTarget(self, action: #selector(backwardBttnDidTap), for: .touchUpInside)
         forwardBttn.addTarget(self, action: #selector(forwardBttnDidTap), for: .touchUpInside)
         playBttn.setImage(UIImage(named: "pause-icon"), for: .normal)
-        // set current playing song's info
-        currentPlayingInfo = CurrentPlaying(array: songs, position: position)
+        // set current playing tracks's info
+        currentPlayingInfo = CurrentPlaying(playingList: withTracks, position: position)
         // configure player finally
-        MiniPlayer.configure(song: song)
+        MiniPlayer.configurePlayer(withTracks: track)
     }
     @objc func forwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared

@@ -14,9 +14,9 @@
 		412917EC268F923E00CC5591 /* ArtistService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412917EB268F923E00CC5591 /* ArtistService.swift */; };
 		4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */; };
 		4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4141876D268E1CF400745DA6 /* MiniPlayer.swift */; };
-		41418772268E773400745DA6 /* SongService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418771268E773400745DA6 /* SongService.swift */; };
+		41418772268E773400745DA6 /* TrackService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418771268E773400745DA6 /* TrackService.swift */; };
 		41418774268E77BE00745DA6 /* CurrentPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41418773268E77BE00745DA6 /* CurrentPlaying.swift */; };
-		4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC77268B7B7D00D83BA6 /* Song.swift */; };
+		4156DC78268B7B7D00D83BA6 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC77268B7B7D00D83BA6 /* Track.swift */; };
 		4156DC7D268B7C3D00D83BA6 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC7C268B7C3D00D83BA6 /* DataService.swift */; };
 		4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC80268B881C00D83BA6 /* PlayerVC.swift */; };
 		4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4156DC84268B9D8E00D83BA6 /* GradientButton.swift */; };
@@ -40,9 +40,9 @@
 		412917EB268F923E00CC5591 /* ArtistService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistService.swift; sourceTree = "<group>"; };
 		4135D862268B6D2800A36CF5 /* UIKit+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+extensions.swift"; sourceTree = "<group>"; };
 		4141876D268E1CF400745DA6 /* MiniPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayer.swift; sourceTree = "<group>"; };
-		41418771268E773400745DA6 /* SongService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongService.swift; sourceTree = "<group>"; };
+		41418771268E773400745DA6 /* TrackService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackService.swift; sourceTree = "<group>"; };
 		41418773268E77BE00745DA6 /* CurrentPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentPlaying.swift; sourceTree = "<group>"; };
-		4156DC77268B7B7D00D83BA6 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		4156DC77268B7B7D00D83BA6 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		4156DC7C268B7C3D00D83BA6 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		4156DC80268B881C00D83BA6 /* PlayerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerVC.swift; sourceTree = "<group>"; };
 		4156DC84268B9D8E00D83BA6 /* GradientButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientButton.swift; sourceTree = "<group>"; };
@@ -166,8 +166,8 @@
 		4156DC79268B7B8700D83BA6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				41418771268E773400745DA6 /* SongService.swift */,
-				4156DC77268B7B7D00D83BA6 /* Song.swift */,
+				41418771268E773400745DA6 /* TrackService.swift */,
+				4156DC77268B7B7D00D83BA6 /* Track.swift */,
 				41418773268E77BE00745DA6 /* CurrentPlaying.swift */,
 			);
 			path = Services;
@@ -328,7 +328,7 @@
 			files = (
 				412917EC268F923E00CC5591 /* ArtistService.swift in Sources */,
 				4141876E268E1CF400745DA6 /* MiniPlayer.swift in Sources */,
-				4156DC78268B7B7D00D83BA6 /* Song.swift in Sources */,
+				4156DC78268B7B7D00D83BA6 /* Track.swift in Sources */,
 				412917E4268F79AF00CC5591 /* ArtistProfileVC.swift in Sources */,
 				41AAEA13269090700030E3E8 /* StretchyHeader.swift in Sources */,
 				412917E7268F7A4700CC5591 /* Artist.swift in Sources */,
@@ -339,7 +339,7 @@
 				4135D863268B6D2800A36CF5 /* UIKit+extensions.swift in Sources */,
 				4156DC85268B9D8E00D83BA6 /* GradientButton.swift in Sources */,
 				41CBDDD7268B6829003C4966 /* AppDelegate.swift in Sources */,
-				41418772268E773400745DA6 /* SongService.swift in Sources */,
+				41418772268E773400745DA6 /* TrackService.swift in Sources */,
 				41AAEA11269085AF0030E3E8 /* AlbumDetailVC.swift in Sources */,
 				41CBDDE1268B6829003C4966 /* Encantus.xcdatamodeld in Sources */,
 				4156DC81268B881C00D83BA6 /* PlayerVC.swift in Sources */,

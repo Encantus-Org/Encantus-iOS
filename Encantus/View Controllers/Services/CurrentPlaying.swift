@@ -10,6 +10,6 @@ import Foundation
 var currentPlayingInfo: CurrentPlaying?
 
 struct CurrentPlaying {
-    var array: [Song]
+    var playingList: [Track]
     var position: Int
 }

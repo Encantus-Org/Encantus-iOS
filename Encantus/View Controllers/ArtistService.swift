@@ -79,9 +79,9 @@ class ArtistService {
         return myAlbums
     }
     // get all songs of an Artist by Id
-    func getAllSongs(byArtistId: String, songs: [Song]) -> [Song] {
+    func getAllSongs(byArtistId: String, songs: [Track]) -> [Track] {
         let artist = getArtist(byId: byArtistId)
-        var mySongs = [Song]()
+        var mySongs = [Track]()
         for song in songs {
             if artist.tracksId.contains(song.uid){
                 mySongs.append(song)
@@ -89,9 +89,9 @@ class ArtistService {
         }
         return mySongs
     }
-    func getAllSongs(byAlbumId: String, songs: [Song]) -> [Song] {
+    func getAllSongs(byAlbumId: String, songs: [Track]) -> [Track] {
         let album = getAlbum(byId: byAlbumId)
-        var mySongs = [Song]()
+        var mySongs = [Track]()
         for song in songs {
             if album.trackId.contains(song.uid){
                 mySongs.append(song)

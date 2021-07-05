@@ -17,7 +17,7 @@ class AlbumDetailVC: UITableViewController {
 
     var albumId: String?
     var album: Album? = nil
-    var allSongsInAlbum = [Song]()
+    var allSongsInAlbum = [Track]()
     var observers = [AnyCancellable]()
     
     let header = StretchyTableHeaderView(frame: CGRect(x: 0, y: 0, width: CheatSheet.screenWidth, height: CheatSheet.screenWidth))
@@ -44,7 +44,7 @@ class AlbumDetailVC: UITableViewController {
     }
     func fetchAllSongs(){
         // get songs
-        DataService.shared.getSongs()
+        DataService.shared.getTracks()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {

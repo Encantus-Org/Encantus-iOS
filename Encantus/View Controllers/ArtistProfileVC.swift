@@ -37,7 +37,7 @@ class ArtistProfileVC: UITableViewController {
     var observers: [AnyCancellable] = []
     var options = [String]()
     
-    var allSongs = [Song]()
+    var allTracks = [Track]()
     var allAlbums = [Album]()
     
     var whichCell = "Tracks"
@@ -135,7 +135,7 @@ class ArtistProfileVC: UITableViewController {
             }).store(in: &observers)
         
         // get songs
-        DataService.shared.getSongs()
+        DataService.shared.getTracks()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -146,8 +146,8 @@ class ArtistProfileVC: UITableViewController {
                     break
                 }
             }, receiveValue: { [weak self] value in
-                let allSongs = ArtistService.shared.getAllSongs(byArtistId: self!.artistId!, songs: value)
-                self?.allSongs = allSongs
+                let allTracks = ArtistService.shared.getAllSongs(byArtistId: self!.artistId!, songs: value)
+                self?.allTracks = allTracks
                 self?.tableView.reloadData()
             }).store(in: &observers)
     }
@@ -158,7 +158,7 @@ extension ArtistProfileVC {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count = 0
         if whichCell == "Tracks" {
-            count = allSongs.count
+            count = allTracks.count
         }
         else if whichCell == "Albums"{
             count = allAlbums.count
@@ -168,7 +168,7 @@ extension ArtistProfileVC {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if whichCell == "Tracks" {
             let cell:SongsOnArtistProfileVcCell = tableView.dequeueReusableCell(withIdentifier: "SongsOnArtistProfileVcCell", for: indexPath) as! SongsOnArtistProfileVcCell
-            let song = allSongs[indexPath.row]
+            let song = allTracks[indexPath.row]
             let name = song.name
             let artistId = song.artistId[0]
             let artist = ArtistService.shared.getArtist(byId: artistId).name

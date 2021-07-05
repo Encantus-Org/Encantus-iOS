@@ -120,7 +120,7 @@ extension PlayerVC {
         if isComingFromMiniPlayer {
             // We're not configuring the player again here because song is already playing and we don't want to have 2 songs playing at the same time
             let MiniPlayer = MiniPlayer.shared
-            let songs = MiniPlayer.array()
+            let songs = MiniPlayer.tracksToPlay()
             let position = MiniPlayer.position()
             let song = songs[position]
             
@@ -129,10 +129,10 @@ extension PlayerVC {
             MiniPlayer.currentTimeLabel = self.currentTimeLabel
             MiniPlayer.songProgressSlider = self.songProgressSlider
             
-            MiniPlayer.configPlayerUI(song: song)
+            MiniPlayer.configPlayerUI(withTrack: song)
         } else {
             let MiniPlayer = MiniPlayer.shared
-            let songs = MiniPlayer.array()
+            let songs = MiniPlayer.tracksToPlay()
             let position = MiniPlayer.position()
             let song = songs[position]
             
@@ -141,11 +141,11 @@ extension PlayerVC {
                 MiniPlayer.currentTimeLabel = self.currentTimeLabel
                 MiniPlayer.songProgressSlider = self.songProgressSlider
                 
-                MiniPlayer.configPlayerUI(song: song)
+                MiniPlayer.configPlayerUI(withTrack: song)
             }
         }
     }
-    func configureOptionsBttn(forSong: Song) {
+    func configureOptionsBttn(forSong: Track) {
         let song = forSong
         // get song data
         let artistId = song.artistId[0]
@@ -183,20 +183,20 @@ extension PlayerVC {
     }
     @objc func backwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        var songs = MiniPlayer.array()
+        var songs = MiniPlayer.tracksToPlay()
         var position = MiniPlayer.position()
         
         MiniPlayer.backwardBttnDidTap()
         
         // now that posituin value is updated, we'll get it back
-        songs = MiniPlayer.array()
+        songs = MiniPlayer.tracksToPlay()
         position = MiniPlayer.position()
         
         let song = songs[position]
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
         // update changes in UI of Player
-        MiniPlayer.configPlayerUI(song: song)
+        MiniPlayer.configPlayerUI(withTrack: song)
     }
     @objc func playBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
@@ -211,20 +211,20 @@ extension PlayerVC {
     }
     @objc func forwardBttnDidTap() {
         let MiniPlayer = MiniPlayer.shared
-        var songs = MiniPlayer.array()
+        var songs = MiniPlayer.tracksToPlay()
         var position = MiniPlayer.position()
         
         MiniPlayer.forwardBttnDidTap()
         
         // now that posituin value is updated, we'll get it back
-        songs = MiniPlayer.array()
+        songs = MiniPlayer.tracksToPlay()
         position = MiniPlayer.position()
         
         let song = songs[position]
         // configure option's menu button when song changes
         configureOptionsBttn(forSong: song)
         // update changes in UI of Player
-        MiniPlayer.configPlayerUI(song: song)
+        MiniPlayer.configPlayerUI(withTrack: song)
     }
     // Assign these values to adjacent values in MiniPlayer and see the magic
     func assignValuesToMiniPlayer() {

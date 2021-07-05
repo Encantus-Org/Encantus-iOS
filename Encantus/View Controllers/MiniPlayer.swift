@@ -10,6 +10,10 @@ import Foundation
 import MediaPlayer
 import AVFoundation
 
+/*
+We've 2 scenes(players) while playing a song -> 1. Player i.e. situated in PlayerVC
+                                                2. MiniPlayer i.e situate in toolbar in HomeVC
+*/
 class MiniPlayer {
     
     var player: AVPlayer!
@@ -18,17 +22,17 @@ class MiniPlayer {
     static let shared = MiniPlayer()
     
 //MARK: 👇🏻Functions specific to both PlayerVC & HomeVC
-    // configure a song, basically play it from starting
-    func configure(song: Song) {
-        // get song data
-        let name = song.name
-        let artistId = song.artistId[0]
+    // configure a track, basically play it
+    func configurePlayer(withTracks: Track) {
+        // get track data
+        let name = withTracks.name
+        let artistId = withTracks.artistId[0]
         let artist = ArtistService.shared.getArtist(byId: artistId).name
-        let albumId = song.albumId
+        let albumId = withTracks.albumId
         let album = ArtistService.shared.getAlbum(byId: albumId).name
-        let genre = song.genres
-        let urlString = song.urlString
-        let cover = UIImage(named: "encantus-logo")
+        let genre = withTracks.genres
+        let urlString = withTracks.urlString
+        let cover = UIImage(named: "encantus-logo") // TODO - CODE A LOGIC TO GET THE COVER
         
         do {
             // to support media playing in background
@@ -47,15 +51,15 @@ class MiniPlayer {
             
             guard let player = player else {return}
             
-            // if there's already a song playing, then stop that and start selected song
+            // if there's already a track playing, then stop that and start selected track
             if player.isPlaying {
                 player.pause()
             }
             
-            // play the somg
+            // play the track
             player.play()
             
-            // to set play icon in playbttn in HomeVC when a song is forwarded when paused from PlayerVC
+            // to set play icon in playbttn in HomeVC when a track is forwarded when paused from PlayerVC
             if self.playBttnInHome != nil {
                 setPlayBttnImage(self.playBttnInHome!)
             }
@@ -103,7 +107,7 @@ class MiniPlayer {
     }
     
     func playOrPause() {
-        switch SongService.shared.checkIfPaused() {
+        switch TrackService.shared.checkIfPaused() {
         case .isPausedd:
             player.play()
             break
@@ -116,55 +120,55 @@ class MiniPlayer {
     }
     
     @objc func forwardBttnDidTap() {
-        let songs = array()
+        let tracksToPlay = tracksToPlay()
         var position = position()
         
-        // change the position of song in an array
-        if position < (songs.count - 1) {
+        // change the position of track in the playing list
+        if position < (tracksToPlay.count - 1) {
             position = position + 1
         }
         // update current playing value after change the position
-        updateCurrentPlaying(songs: songs, position: position)
+        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
         // update changes in UI of miniPlayer
-        configMiniPlayerUI(song: songs[position])
-        // take user to next song
-        forward(position: position, songs: songs)
+        configMiniPlayerUI(withTrack: tracksToPlay[position])
+        // take user to next track
+        forward(inTrackList: tracksToPlay, toPosition: position)
     }
     
-    func forward(position: Int, songs: [Song]) {
+    func forward(inTrackList: [Track], toPosition: Int) {
         player.pause()
         if coverImageView!.image != nil {
             coverImageView!.toIdentity(1.05)
         }
-        configure(song: songs[position])
+        configurePlayer(withTracks: inTrackList[toPosition])
     }
     
     @objc func backwardBttnDidTap() {
-        let songs = array()
+        let tracksToPlay = tracksToPlay()
         var position = position()
         
-        // change the position of song in an array
+        // change the position of track in an array
         if position>0 {
             position = position - 1
         }
         // update current playing value after change the position
-        updateCurrentPlaying(songs: songs, position: position)
+        updateCurrentPlaying(withTracksList: tracksToPlay, andPosition: position)
         // update changes in UI of miniPlayer
-        configMiniPlayerUI(song: songs[position])
-        // take user to previous song
-        backward(position: position, songs: songs)
+        configMiniPlayerUI(withTrack: tracksToPlay[position])
+        // take user to previous track
+        backward(inTrackList: tracksToPlay, toPosition: position)
     }
     
-    func backward(position: Int, songs: [Song]) {
+    func backward(inTrackList: [Track], toPosition: Int) {
         player.pause()
         if coverImageView!.image != nil {
             coverImageView!.toIdentity(1.05)
         }
-        configure(song: songs[position])
+        configurePlayer(withTracks: inTrackList[toPosition])
     }
     
     func setPlayBttnImage(_ playBttn: UIButton) {
-        switch SongService.shared.checkIfPaused() {
+        switch TrackService.shared.checkIfPaused() {
         case .isPausedd:
             playBttn.play()
             break
@@ -176,7 +180,7 @@ class MiniPlayer {
         }
     }
     
-//MARK: 👇🏻Functions and values specific to HomeVC only
+//MARK: 👇🏻references specific to HomeVC only
     var currentSongCoverImageView:UIImageView?
     var currentSongNameLabel: UILabel?
     var currentSongArtistNameLabel: UILabel?
@@ -184,20 +188,7 @@ class MiniPlayer {
 //    var backwardBttnInHome: UIButton?
 //    var forwardBttnInHome: UIButton
     
-    // update chnages in MiniPlayer's UI located in HomeVC
-    func configMiniPlayerUI(song: Song) {
-        let coverUrl = song.coverUrlString
-        let name = song.name
-        let artistId = song.artistId[0]
-        let artist = ArtistService.shared.getArtist(byId: artistId).name
-        
-        currentSongCoverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
-        currentSongNameLabel!.text = name
-        currentSongArtistNameLabel!.text = artist
-    }
-    
-//MARK: 👇🏻Functions and values specific to PlayerVC only
-    // properties reffered from `PlayerVC`
+//MARK: 👇🏻references specific to Player only
     var timer: Timer!
     var currentTimeLabel: UILabel?
     var completeSongLengthLabel: UILabel?
@@ -207,13 +198,31 @@ class MiniPlayer {
     var coverImageView2: UIImageView?
     var songNameLabel: UILabel?
     var artistNameLabel: UILabel?
-    
-    // update chnages in Player's UI located in PlayerVC
-    func configPlayerUI(song: Song){
-        // get song data
-        let coverUrl = song.coverUrlString
-        let name = song.name
-        let artistId = song.artistId[0]
+}
+
+// MINIPLAYER ONLY
+extension MiniPlayer {
+    // update changes in MiniPlayer's UI located in HomeVC
+    func configMiniPlayerUI(withTrack: Track) {
+        let coverUrl = withTrack.coverUrlString
+        let name = withTrack.name
+        let artistId = withTrack.artistId[0]
+        let artist = ArtistService.shared.getArtist(byId: artistId).name
+        
+        currentSongCoverImageView!.kf.setImage(with: URL(string: coverUrl), placeholder: UIImage(named: "placeholder"), options: [.transition(.fade(0.5))], progressBlock: nil, completionHandler: nil)
+        currentSongNameLabel!.text = name
+        currentSongArtistNameLabel!.text = artist
+    }
+}
+
+// PLAYER ONLY
+extension MiniPlayer {
+    // update changes in Player's UI located in PlayerVC
+    func configPlayerUI(withTrack: Track){
+        // get track's data
+        let coverUrl = withTrack.coverUrlString
+        let name = withTrack.name
+        let artistId = withTrack.artistId[0]
         let artist = ArtistService.shared.getArtist(byId: artistId).name
         
         // schedule timer
@@ -226,9 +235,9 @@ class MiniPlayer {
         songNameLabel!.text = name
         artistNameLabel!.text = artist
         
-        // song progress slider
+        // track progress slider
         songProgressSlider!.minimumValue = 0.0
-        // get song's total duration
+        // get track's total duration
         let duration = MiniPlayer.shared.player!.currentItem?.asset.duration
         DispatchQueue.main.async {
             self.completeSongLengthLabel!.text = duration?.minutes
@@ -237,7 +246,7 @@ class MiniPlayer {
     }
     
     func setImageAnimation(_ imageView: UIImageView){
-        switch SongService.shared.checkIfPaused() {
+        switch TrackService.shared.checkIfPaused() {
         case .isPausedd:
             imageView.shrink(0.8)
             break
@@ -249,7 +258,7 @@ class MiniPlayer {
         }
     }
     
-    // change values of slider and labe with timer
+    // change values of slider and label with timer
     @objc func changeSliderValueWithTimer() {
         currentTimeLabel!.text = player.currentTime().minutes
         UIView.animate(withDuration: 0.1, animations: {
@@ -257,29 +266,31 @@ class MiniPlayer {
         })
     }
     
-    // change value of audio's poition by dragging
+    // change value of audio's position by dragging
     @objc func changeSliderValueOnDrag() {
         let seconds: Int64 = Int64(songProgressSlider!.value)
         let targetTime: CMTime = CMTimeMake(value: seconds, timescale: 1)
         
-        // to update now playing in notification center
+        // to update now playing in notification centre
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.shared.player!.currentTime())
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 0
         MPNowPlayingInfoCenter.default().nowPlayingInfo=nowPlayingInfo
         
         MiniPlayer.shared.player!.seek(to: targetTime) { (isCompleted) in
-            // to update now playing in notification center
+            // to update now playing in notification centre
             self.nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = CMTimeGetSeconds(MiniPlayer.shared.player!.currentTime())
             self.nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = 1
             MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
         }
         self.currentTimeLabel!.text = String(TimeInterval(songProgressSlider!.value).minutes())
     }
-    
-    // Current Playing list
-    func array() -> [Song]{
-        let array = currentPlayingInfo?.array
-        guard array != nil else { return [Song(uid: "Nan", name: "NaN", albumId: "NaN", artistId: ["NaN"], genres: "", urlString: "Nan", coverUrlString: "NaN")]}
+}
+
+// Current Playing list functions
+extension MiniPlayer {
+    func tracksToPlay() -> [Track]{
+        let array = currentPlayingInfo?.playingList
+        guard array != nil else { return [Track(uid: "Nan", name: "NaN", albumId: "NaN", artistId: ["NaN"], genres: "", urlString: "Nan", coverUrlString: "NaN")]}
         return array!
     }
     func position() -> Int{
@@ -287,7 +298,7 @@ class MiniPlayer {
         guard position != nil else {return 0}
         return position!
     }
-    func updateCurrentPlaying(songs: [Song], position: Int){
-        currentPlayingInfo = CurrentPlaying(array: songs, position: position)
+    func updateCurrentPlaying(withTracksList: [Track], andPosition: Int){
+        currentPlayingInfo = CurrentPlaying(playingList: withTracksList, position: andPosition)
     }
 }
