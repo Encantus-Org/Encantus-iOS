@@ -205,7 +205,7 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         if collectionView == categoryCollectionView {
             let genres = categories[indexPath.row]
             // if genres is selected to all then sort the array to all tracks
-            if genres == "All"{
+            if genres == "All" {
                 sortedTracks = tracks
             } else {
                 // if genres is selected to `any specific value` then sort the array accordingly
